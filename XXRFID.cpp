@@ -37,15 +37,19 @@ int WriteCmd(XXRFIDCLient* client, unsigned char* buf, int len)
     switch(client->type)
     {
     case ETH:
-        ret = writeSocket((long)(client->handle), buf, len);
+        ret = writeSocket(client->handle, buf, len);
         break;
 
     case COM:
-        ret = writeCom((long)(client->handle), buf, len);
+        ret = writeCom(client->handle, buf, len);
         break;
 
 	case USB:
-		ret = writeUSB(client->handle, buf, len);
+		ret = writeUSB((void*)client->handle, buf, len);
+		break;
+
+	case SERVER:
+		ret = WriteServerSocket(buf, len);
 		break;
 
     default:
@@ -384,9 +388,9 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 		}
 
 		memset(s, 0, sizeof(XXRFIDCLient));
-		s->handle = (void*)initCom(com, baudRate);
+		s->handle = initCom(com, baudRate);
 
-		if (s->handle == (void*)-1) {
+		if (s->handle == -1) {
 			free(s);
 			return NULL;
 		}
@@ -484,7 +488,7 @@ XXRFIDCLient* OpenUSB(int timeout)
 		}
 
 		memset(s, 0, sizeof(XXRFIDCLient));
-		s->handle = initUSB(timeout);
+		s->handle = (long)initUSB(timeout);
 
 		if((s->handle) == NULL) {
 			free(s);
@@ -603,7 +607,7 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 		}
 
 		memset(s, 0, sizeof(XXRFIDCLient));
-		s->handle = (void*)handSocket;
+		s->handle = handSocket;
 
 		if(threadIsStop == true) {
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
@@ -682,42 +686,92 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 
 XXRFIDCLient* Open(short port)
 {
-    int handle = OpenServer(port);
-    if(handle == -1) {
-        LOG_TICK("failed to OpenServer");
-        return NULL;
-    }
+	int ret = 0;
+	XXRFIDCLient* client = NULL;
 
-	XXRFIDCLient* client = (XXRFIDCLient*)malloc(sizeof(*client));
-	if(client == NULL) {
-		close(handle);
-		LOG_TICK("failed to malloc");
+	do {
+		int handle = OpenServer(port);
+		if(handle == -1) {
+			LOG_TICK("failed to OpenServer");
+			return NULL;
+		}
+
+		client = (XXRFIDCLient*)malloc(sizeof(*client));
+		if(client == NULL) {
+			close(handle);
+			LOG_TICK("failed to malloc");
+			return NULL;
+		}
+
+		client->handle = handle;
+		client->type = SERVER;
+
+		if(threadIsStop == true) {
+			pthread_mutex_lock(&g_MessageProcCreateMutex);
+			if(threadIsStop == true) {
+				QueueInit();
+				SelectListInit();
+				threadIsStop = false;
+				pthread_t threadID = 0;
+				int res = pthread_create(&threadID, NULL, messageProcThread, NULL);
+				if (res != 0) {
+					LOG_TICK("failed to pthread_create");
+					pthread_mutex_unlock(&g_MessageProcCreateMutex);
+					return NULL;
+				}
+			}
+			pthread_mutex_unlock(&g_MessageProcCreateMutex);
+		}
+
+		client->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
+		if (client->sem == NULL) {
+			LOG_TICK("failed to malloc");
+			ret = -1;
+		}
+
+		memset(client->sem, 0, sizeof(sem_t) * EMESS_Count);
+		for (int i = 0; i < EMESS_Count; i++) {
+			int ret = sem_init(&client->sem[i], 0, 0);
+			if (ret != 0) {
+				LOG_TICK("filed to sem_init");
+				ret = -1;
+				break;
+			}
+		}
+
+		client->result = (MessageResult*)malloc(sizeof(MessageResult) * EMESS_Count);
+		if (client->result == NULL) {
+			ret = -1;
+			LOG_TICK("failed to malloc");
+			break;
+		}
+		memset(client->result, 0, sizeof(MessageResult) * EMESS_Count);
+
+		client->data = (unsigned char*)malloc(1024);
+		if (client->data == NULL) {
+			ret = -1;
+			LOG_TICK("failed to malloc");
+			break;
+		}
+	} while (false);
+
+	if (ret < 0) {
+		if (client->result != NULL) {
+			free(client->result);
+		}
+
+		if (client->sem != NULL) {
+			free(client->sem);
+		}
+
 		return NULL;
 	}
 
-	CreateSelectThread();
+	SocketListInit();
 
-	client->handle = (void*)handle;
-	client->type = SERVER;
 	client->isOpened = true;
+	CreateSelectThread();
 	InsertSelectList(client);
-
-	if(threadIsStop == true) {
-		pthread_mutex_lock(&g_MessageProcCreateMutex);
-		if(threadIsStop == true) {
-			QueueInit();
-			SelectListInit();
-			threadIsStop = false;
-			pthread_t threadID = 0;
-			int res = pthread_create(&threadID, NULL, messageProcThread, NULL);
-			if (res != 0) {
-				LOG_TICK("failed to pthread_create");
-				pthread_mutex_unlock(&g_MessageProcCreateMutex);
-				return NULL;
-			}
-		}
-		pthread_mutex_unlock(&g_MessageProcCreateMutex);
-	}
 
 	return client;
 }

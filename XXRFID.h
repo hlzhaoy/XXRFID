@@ -81,7 +81,7 @@ typedef struct {
 }MessageResult;
 
 typedef struct {
-    void* handle;
+    long handle;
     delegateTagEpcLog call_TagEpcLog;
     delegateTagEpcOver call_TagEpcOver;
     delegateGpiTriggerStart call_GpiTriggerStart;

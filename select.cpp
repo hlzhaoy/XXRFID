@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include "select.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -36,9 +37,15 @@ void* ProcSelect(void* lpParameter)
         FD_ZERO(&readset);
         maxfd = 0;
 
+        // LOG_TICK("before for");
 		for (list t = g_SelectList->next; t != NULL; t = t->next) {
-			FD_SET((int)(long)(((XXRFIDCLient*)(t->data))->handle), &readset);
+			FD_SET(((XXRFIDCLient*)(t->data))->handle, &readset);
+            if (((XXRFIDCLient*)(t->data))->handle > maxfd) {
+                maxfd = ((XXRFIDCLient*)(t->data))->handle;
+            }
 		}
+
+        // LOG_TICK("after for");
 
         struct timeval to;
         to.tv_sec = 0;
@@ -47,10 +54,9 @@ void* ProcSelect(void* lpParameter)
         int ret = select(maxfd + 1, &readset, NULL, NULL, &to);
         if (ret == -1) {
             pthread_mutex_unlock(&g_SelectListMutex);
-            LOG_TICK("failed to select");
 			int err = errno;
 			char tmp[128] = {0};
-			sprintf(tmp, "errno = %d \n", err);
+			sprintf(tmp, "faield to select, errno = %d \n", err);
 			LOG_TICK(tmp);
 
 			if (err == EBADF) {
@@ -70,91 +76,69 @@ void* ProcSelect(void* lpParameter)
 
             return 0;
         } else if(ret == 0) {
-            LOG_TICK("ret = 0");
             pthread_mutex_unlock(&g_SelectListMutex);
             PreciseSleepMillisecond(50);
             continue;
         }
 
-        LOG_TICK("hello");
 		for (list t = g_SelectList->next; t != NULL; t = t->next) {
-            if (FD_ISSET((long)((XXRFIDCLient*)(t->data))->handle, &readset)) {
+            if (FD_ISSET(((XXRFIDCLient*)(t->data))->handle, &readset)) {
                 if (((XXRFIDCLient*)(t->data))->type == ETH || ((XXRFIDCLient*)(t->data))->type == ACCEPT) {
-                    ret = recv((long)((XXRFIDCLient*)(t->data))->handle, (char*)&(((XXRFIDCLient*)(t->data))->data[((XXRFIDCLient*)(t->data))->index]), 
-                        BUF_LINE - ((XXRFIDCLient*)(t->data))->index, 0);  //socket使用recv，文件句柄使用read，后面再考虑合并问题
+                    ret = recv(((XXRFIDCLient*)(t->data))->handle, (char*)&(((XXRFIDCLient*)(t->data))->data[((XXRFIDCLient*)(t->data))->index]), 
+                        BUF_LINE - ((XXRFIDCLient*)(t->data))->index, 0);  // socket使用recv，文件句柄使用read，后面再考虑合并问题
                     if (ret == 0) {
                         if (((XXRFIDCLient*)(t->data))->call_TcpDisconnected != NULL) {
                             ((XXRFIDCLient*)(t->data))->call_TcpDisconnected((char*)"peer close the socket");
                         }
 
+                        DelFromSocketList(((XXRFIDCLient*)(t->data))->handle);
 						DeleteList(g_SelectList, t);
 						if (IsEmpty(g_SelectList) == true) {
+                            pthread_mutex_unlock(&g_SelectListMutex);
 							break;
 						}
+                        pthread_mutex_unlock(&g_SelectListMutex);
                         continue;
                     } else if(ret < 0) {
 
                     }
                 } else {
-                    int s = accept((long)((XXRFIDCLient*)(t->data))->handle, NULL, NULL);
+                    int s = accept(((XXRFIDCLient*)(t->data))->handle, NULL, NULL);
                     if(s == -1) {
                         LOG_TICK("failed to accept");
                         continue;
                     }
+                    LOG_TICK("accept");
 
                     XXRFIDCLient* client = (XXRFIDCLient*)malloc(sizeof(*client));
                     if(client == NULL) {
                         LOG_TICK("failed to malloc");
+                        pthread_mutex_unlock(&g_SelectListMutex);
                         continue;
                     }
+
                     memset(client, 0, sizeof(*client));
-
                     memcpy(client, t->data, sizeof(*client));
-                    client->handle = (void*)s;
-                    client->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
-                    if (client->sem == NULL) {
-                        ret = -1;
-                        LOG_TICK("failed to malloc");
-                        break;
-                    }
-
-                    memset(client->sem, 0, sizeof(sem_t) * EMESS_Count);
-                    for (int i = 0; i < EMESS_Count; i++) {
-                        int ret = sem_init(&client->sem[i], 0, 0);
-                        if (ret != 0) {
-                             LOG_TICK("filed to sem_init");
-                            ret = -1;
-                            break;
-                        }
-                    }
-
-                    client->result = (MessageResult*)malloc(sizeof(MessageResult) * EMESS_Count);
-                    if (client->result == NULL) {
-                        ret = -1;
-                        LOG_TICK("failed to malloc");
-                        break;
-                    }
-                    memset(client->result, 0, sizeof(MessageResult) * EMESS_Count);
-
-                    client->data = (unsigned char*)malloc(1024);
-                    if (client->data == NULL) {
-                        ret = -1;
-                        LOG_TICK("failed to malloc");
-                        break;
-                    }
-
+                    client->handle = s;
                     client->type = ACCEPT;
-                    InsertSelectList(client);
 
+                    LOG_TICK("2");
+                    pthread_mutex_unlock(&g_SelectListMutex);
+                    InsertSelectList(client);
+                    pthread_mutex_lock(&g_SelectListMutex);
+                    LOG_TICK("3");
                     if(client->call_GClientConnected != NULL) {
                         client->call_GClientConnected((char*)"accept a reader");
                     }
-
+                    LOG_TICK("4");
+                    InsertSocketList(s);
+                    LOG_TICK("5");
                     PreciseSleepMillisecond(50);
+                    pthread_mutex_unlock(&g_SelectListMutex);
+                    LOG_TICK("pthread_mutex_unlock");
                     continue;
                 }
 
-                LOG_TICK("hello");
 				char* tmp = HexToString(((XXRFIDCLient*)(t->data))->data, ret);
 				LOG_TICK(tmp);
 				delete []tmp;
@@ -195,13 +179,7 @@ void* ProcSelect(void* lpParameter)
             }
         }
 
-        FD_ZERO(&readset);
-        
-        for (list t = g_SelectList->next; t != NULL; t = t->next) {
-            FD_SET((long)((XXRFIDCLient*)(t->data))->handle, &readset);  //将列表中的所有fd重新SET
-        }
         pthread_mutex_unlock(&g_SelectListMutex);
-
         PreciseSleepMillisecond(50);
     }
 
@@ -300,6 +278,63 @@ void SelectListInit()
         pthread_mutex_unlock(&g_SelectListCreateMutex);
     }
 }
+
+#if REGION("接收到的socket连接")
+list g_socketList = NULL;
+static pthread_mutex_t g_SocketListCreateMutex = PTHREAD_MUTEX_INITIALIZER;
+void SocketListInit()
+{
+    if (g_socketList == NULL) {
+        pthread_mutex_lock(&g_SocketListCreateMutex);
+        if (g_socketList == NULL) {
+            g_socketList = InitList();
+        }
+        pthread_mutex_unlock(&g_SocketListCreateMutex);
+    }
+}
+
+void InsertSocketList(int s)
+{
+    struct node* t = (struct node*)malloc(sizeof (*t));
+    memset(t, 0, sizeof(*t));
+    t->data = (int*)malloc(sizeof(s));
+    memcpy(t->data, &s, sizeof(s));
+
+    InsertHead(g_socketList, t);
+}
+
+void DelFromSocketList(int s)
+{
+    list head = g_socketList;
+    while (head->next != NULL) {
+        if (*(int*)(head->next->data) == s) {
+            break;
+        }
+        head = head->next;
+    }
+
+    list t = NULL;
+    if (head->next != NULL) {
+        t = head->next;
+        head->next = head->next->next;
+
+        free(t->data);
+        free(t);
+    }
+}
+
+int WriteServerSocket(unsigned char* wbuf, int len)
+{
+    list head = g_socketList;
+    while (head->next != NULL) {
+       int ret = send(*(int*)head->next->data, wbuf, len, 0);
+       if (ret == -1) {
+           return ret;
+       }
+    }
+}
+
+#endif
 
 #ifdef __cplusplus
 }

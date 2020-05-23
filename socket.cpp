@@ -5,7 +5,7 @@
 #include <errno.h>
 #include "select.h"
 #include <stdio.h>
-#include <sys/types.h>          /* See NOTES */
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -77,7 +77,7 @@ int writeSocket(int handle, unsigned char* buf, int len)
 
 int cleanSocket(XXRFIDCLient* client)
 {
-    close((long)client->handle);
+    close(client->handle);
 
     return ExitSelectThread(client);
 }

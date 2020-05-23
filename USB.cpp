@@ -29,7 +29,7 @@ void* USBThread(void* lpParam)
 	XXRFIDCLient* client  = (XXRFIDCLient*)lpParam;
 
 	while (threadIsStop == false) {
-		int ret = readUSB(client->handle, &client->data[client->index], BUF_LINE - client->index); 
+		int ret = readUSB((void*)client->handle, &client->data[client->index], BUF_LINE - client->index); 
 		if(ret > 0) {
 			client->index += ret;
 			do 
@@ -134,7 +134,7 @@ int writeUSB(void* handUSB, unsigned char* wbuf, int len)
 int cleanUSB(XXRFIDCLient* client)
 {
 	hid_close((hid_device*)client->handle);
-	client->handle = NULL;
+	client->handle = -1;
 
 	threadIsStop = true;
 	pthread_join(threadID, NULL);

@@ -15,11 +15,22 @@ void TagEpcOver(void)
 	printf("TagEpcOver \n");
 }
 
+void TcpDisconnected(char* msg)
+{
+	printf("%s : %d \n", __FUNCTION__, __LINE__);
+}
+
+void GClientConnected(char* msg)
+{
+	printf("%s : %d \n", __FUNCTION__, __LINE__);
+}
+
 int main(int argc, char* argv[])
 {
     // XXRFIDCLient* s = OpenSerial("/dev/ttyUSB0:115200", 5);
 	// XXRFIDCLient* s = OpenUSB(5);
-	XXRFIDCLient *s = OpenTcp("192.168.1.168:8168", 5);
+	// XXRFIDCLient *s = OpenTcp("192.168.1.168:8168", 5);
+	XXRFIDCLient *s = Open(8168);
 	if(s == NULL)
 	{
 		printf("failed to OpenSerial \n");
@@ -28,6 +39,8 @@ int main(int argc, char* argv[])
 
     RegCallBack(s, ETagEpcLog, (void*)TagEpcLog);
     RegCallBack(s, ETagEpcOver, (void*)TagEpcOver);
+	RegCallBack(s, ETcpDisconnected, (void*)TcpDisconnected);
+	RegCallBack(s, EGClientConnected, (void*)GClientConnected);
 
 	printf("请选择命令：\n"
 		"0，停止。\n"

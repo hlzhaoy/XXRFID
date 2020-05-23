@@ -27,7 +27,7 @@ void* comThread(void* lpParam)
 	XXRFIDCLient* client  = (XXRFIDCLient*)lpParam;
 
 	while (threadIsStop == false) {
-		int ret = readCom((long)client->handle, &client->data[client->index], BUF_LINE-client->index); 
+		int ret = readCom(client->handle, &client->data[client->index], BUF_LINE-client->index); 
 		if(ret > 0) {
 			client->index += ret;
 			do 
@@ -274,7 +274,7 @@ int writeCom(int handCom, unsigned char* wbuf, int len)
 int cleanCom(XXRFIDCLient* client)
 {
 	close((long)client->handle);
-	client->handle = (void*)-1;
+	client->handle = -1;
 
 	LOG_TICK("in cleanCom");
 

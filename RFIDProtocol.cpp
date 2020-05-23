@@ -187,7 +187,7 @@ int InventoryEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseInventoryEpc* in)
     unsigned short dataLen = 0, len = 0;
     unsigned char readMode = in->InventoryMode; //0, danci;1,continue
 
-	if (in == NULL) {
+	if (in == NULL || s == NULL) {
 		return -1;
 	}
 
