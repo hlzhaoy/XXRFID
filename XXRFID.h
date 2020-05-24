@@ -66,10 +66,10 @@ typedef enum
 }Callback_Type;
 
 typedef enum {
-    ETH = 1,
+    ETH = 1,  // 客户端主动以客户端模式连接
     COM = 2,
-    SERVER = 3,
-    ACCEPT = 4,
+    SERVER = 3, // 客户端以服务器模式启动
+    CLIENT = 4, // 读写器主动连接动态库
 	USB = 5,
     OTHER = 1000
 }ConnType;
@@ -78,7 +78,7 @@ typedef struct {
 	void* rst;
 }MessageResult;
 
-typedef struct {
+typedef struct XXRFIDCLient{
     long handle;
     delegateTagEpcLog call_TagEpcLog;
     delegateTagEpcOver call_TagEpcOver;
@@ -96,6 +96,9 @@ typedef struct {
     int index;
     ConnType type;
     bool isOpened;
+    bool threadIsStop;
+    bool timerThreadIsStop;
+    unsigned long tick;
 }XXRFIDCLient;
 
 XXRFIDCLient* OpenSerial(char* readerName, int timeout);

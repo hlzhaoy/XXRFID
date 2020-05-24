@@ -132,6 +132,10 @@ void getConnectStateCmd(unsigned char* buf, int* len, unsigned char* rcv)
 
 int Stop(XXRFIDCLient* s, unsigned char* buf, MsgBaseStop* msg)
 {
+	if (s == NULL || s->result == NULL || msg == NULL) {
+		return -1;
+	}
+
 	unsigned char FrameHead = 0x5A;
     unsigned int Protocol = 0x000102FF;
 	unsigned short dataLen = 0, len = 0;
@@ -158,8 +162,11 @@ int Stop(XXRFIDCLient* s, unsigned char* buf, MsgBaseStop* msg)
 
 void ProcStop(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_Stop].rst != NULL) {
 		((MsgBaseStop*)(s->result[EMESS_Stop].rst))->rst.RtCode = buf[index];
 
@@ -182,14 +189,14 @@ void ProcStop(XXRFIDCLient* s, unsigned char* buf)
 
 int InventoryEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseInventoryEpc* in)
 {
+	if (in == NULL || s == NULL || s->result == NULL) {
+		return -1;
+	}
+
     unsigned char FrameHead = 0x5A;
     unsigned int Protocol = 0x00010210;
     unsigned short dataLen = 0, len = 0;
     unsigned char readMode = in->InventoryMode; //0, danci;1,continue
-
-	if (in == NULL || s == NULL) {
-		return -1;
-	}
 
 	s->result[EMESS_InventoryEpc].rst = (void*)in;
 
@@ -249,8 +256,11 @@ int InventoryEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseInventoryEpc* in)
 
 void ProcInventoryEpc(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_InventoryEpc].rst != NULL) {
 
 		((MsgBaseStop*)(s->result[EMESS_InventoryEpc].rst))->rst.RtCode = buf[index];
@@ -330,14 +340,14 @@ int FillWriteEpcData(unsigned char* buf, char area, unsigned short start, char* 
 
 int WriteEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseWriteEpc* in)
 {
+	if (in == NULL || s == NULL || s->result == NULL) {
+		return -1;
+	}
+
 	unsigned char FrameHead = 0x5A;
     unsigned int Protocol = 0x00010211;
     unsigned short dataLen = 0, len = 0;
     unsigned int Ant = in->AntennaEnable;
-
-	if (in == NULL) {
-		return -1;
-	}
 
 	s->result[EMESS_WriteEpc].rst = (void*)in;
 
@@ -385,8 +395,11 @@ int WriteEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseWriteEpc* in)
 
 void ProcWriteEpc(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_WriteEpc].rst != NULL) {
 		((MsgBaseWriteEpc*)(s->result[EMESS_WriteEpc].rst))->rst.RtCode = buf[index];
 
@@ -453,14 +466,14 @@ void ProcWriteEpc(XXRFIDCLient* s, unsigned char* buf)
 
 int LockEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseLockEpc* in)
 {
+	if (in == NULL || s == NULL || s->result == NULL) {
+		return -1;
+	}
+
 	unsigned char FrameHead = 0x5A;
     unsigned int Protocol = 0x00010212;
     unsigned short dataLen = 0, len = 0;
     unsigned int Ant = in->AntennaEnable;
-
-	if (in == NULL) {
-		return -1;
-	}
 
 	s->result[EMESS_LockEpc].rst = (void*)in;
 
@@ -506,8 +519,11 @@ int LockEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseLockEpc* in)
 
 void ProcLockEpc(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_LockEpc].rst != NULL) {
 		((MsgBaseStop*)(s->result[EMESS_LockEpc].rst))->rst.RtCode = buf[index];
 
@@ -587,14 +603,14 @@ int FillDestoryEpcPasswd(unsigned char* buf, char* passwd)
 
 int DestoryEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseDestoryEpc* in)
 {
+	if (in == NULL || s == NULL || s->result == NULL) {
+		return -1;
+	}
+
 	unsigned char FrameHead = 0x5A;
     unsigned int Protocol = 0x00010213;
     unsigned short dataLen = 0, len = 0;
     unsigned int Ant = in->AntennaEnable;
-
-	if (in == NULL) {
-		return -1;
-	}
 
 	s->result[EMESS_DestoryEpc].rst = in;
 
@@ -632,8 +648,11 @@ int DestoryEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseDestoryEpc* in)
 
 void ProcDestoryEpc(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_DestoryEpc].rst != NULL) {
 		((MsgBaseStop*)(s->result[EMESS_DestoryEpc].rst))->rst.RtCode = buf[index];
 
@@ -681,123 +700,127 @@ void ProcDestoryEpc(XXRFIDCLient* s, unsigned char* buf)
 
 void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 {
-	try {
-		LogBaseEpcInfo msg;
-		int index = 0;
-		int len = (buf[0]<<8) | buf[1];
-		int epcLen = (buf[2]<<8) | buf[3];
-		index += 4;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
-		memset(&msg, 0, sizeof(msg));
+	LogBaseEpcInfo msg;
+	int index = 0;
+	int len = (buf[0]<<8) | buf[1];
+	int epcLen = (buf[2]<<8) | buf[3];
+	index += 4;
 
-		char* tmp = HexToString(&buf[index], epcLen);
-		memcpy(msg.Epc, tmp, strlen(tmp));
-		delete [] tmp;
-		index += epcLen;
+	memset(&msg, 0, sizeof(msg));
 
-		tmp = HexToString(&buf[index], 2);
-		memcpy(msg.Pc, tmp, strlen(tmp));
-		delete [] tmp;
-		index += 2;
+	char* tmp = HexToString(&buf[index], epcLen);
+	memcpy(msg.Epc, tmp, strlen(tmp));
+	delete [] tmp;
+	index += epcLen;
 
-		msg.AntId = buf[index];
-		index += 1;
+	tmp = HexToString(&buf[index], 2);
+	memcpy(msg.Pc, tmp, strlen(tmp));
+	delete [] tmp;
+	index += 2;
 
-		LOG_TICK("");
+	msg.AntId = buf[index];
+	index += 1;
 
-		while(len >= index) {
-			switch(buf[index]) {
-				case 0x01:
-        			{
-	             		msg.Rssi = buf[index+1];
-						index += 1;
-            		}
-					break;
+	LOG_TICK("");
 
-				case 0x02:
-            		{
-						msg.Result = buf[index+1];
-						index += 1;
-            		}
-					break;
-
-				case 0x03:
-					{
-						LOG_TICK("");
-						int tidLen = (buf[index+1]<<8) | buf[index+2];
-						tmp = HexToString(&buf[index+3], tidLen);
-						memcpy(msg.Tid, tmp, strlen(tmp));
-						delete [] tmp;
-						index += tidLen+2;
-						LOG_TICK("");
-					}
-					break;
-
-				case 0x04:
-					{
-						LOG_TICK("");
-						int userLen = (buf[index+1]<<8) | buf[index+2];
-						tmp = HexToString(&buf[index+3], userLen);
-						memcpy(msg.Userdata, tmp, strlen(tmp));
-						delete [] tmp;
-						index += userLen+2;
-						LOG_TICK("");
-					}
-					break;
-
-				case 0x05:
-					{
-						LOG_TICK("");
-						int ReserveLen = (buf[index+1]<<8) | buf[index+2];
-						tmp = HexToString(&buf[index+3], ReserveLen);
-						memcpy(msg.Reserved, tmp, strlen(tmp));
-						delete [] tmp;
-						index += ReserveLen+2;
-						LOG_TICK("");
-					}
-
-				case 0x06:
+	while(len >= index) {
+		switch(buf[index]) {
+			case 0x01:
+				{
+					msg.Rssi = buf[index+1];
 					index += 1;
-					break;
+				}
+				break;
 
-				case 0x07:
-					{
-						index += 8;
-					}
-					break;
+			case 0x02:
+				{
+					msg.Result = buf[index+1];
+					index += 1;
+				}
+				break;
 
-				case 0x08:
-					{
-						index += 4;
-					}
-					break;
+			case 0x03:
+				{
+					LOG_TICK("");
+					int tidLen = (buf[index+1]<<8) | buf[index+2];
+					tmp = HexToString(&buf[index+3], tidLen);
+					memcpy(msg.Tid, tmp, strlen(tmp));
+					delete [] tmp;
+					index += tidLen+2;
+					LOG_TICK("");
+				}
+				break;
 
-				case 0x09:
-					{
-						index += 1;
-					}
-					break;
+			case 0x04:
+				{
+					LOG_TICK("");
+					int userLen = (buf[index+1]<<8) | buf[index+2];
+					tmp = HexToString(&buf[index+3], userLen);
+					memcpy(msg.Userdata, tmp, strlen(tmp));
+					delete [] tmp;
+					index += userLen+2;
+					LOG_TICK("");
+				}
+				break;
 
-				default:
-					break;
+			case 0x05:
+				{
+					LOG_TICK("");
+					int ReserveLen = (buf[index+1]<<8) | buf[index+2];
+					tmp = HexToString(&buf[index+3], ReserveLen);
+					memcpy(msg.Reserved, tmp, strlen(tmp));
+					delete [] tmp;
+					index += ReserveLen+2;
+					LOG_TICK("");
+				}
 
-			}
+			case 0x06:
+				index += 1;
+				break;
 
-			index += 1; //PID+1
+			case 0x07:
+				{
+					index += 8;
+				}
+				break;
+
+			case 0x08:
+				{
+					index += 4;
+				}
+				break;
+
+			case 0x09:
+				{
+					index += 1;
+				}
+				break;
+
+			default:
+				break;
+
 		}
 
-		if(s != NULL && s->call_TagEpcLog != NULL) {
-			LOG_TICK("");
-			s->call_TagEpcLog(msg);
-			LOG_TICK("");
-		}
-	} catch (...) {
-		LOG_TICK("ProcDataResultCmd exception");
+		index += 1; //PID+1
+	}
+
+	if(s != NULL && s->call_TagEpcLog != NULL) {
+		LOG_TICK("");
+		s->call_TagEpcLog(msg);
+		LOG_TICK("");
 	}
 }
 
 void ProcReadFinish(XXRFIDCLient* s)
 {
+	if (s == NULL) {
+		return;
+	}
+
     if(s->call_TagEpcOver != NULL) {
 		s->call_TagEpcOver();
 	}
@@ -805,7 +828,7 @@ void ProcReadFinish(XXRFIDCLient* s)
 
 int GetCapabilities(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetCapabilities* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -831,8 +854,11 @@ int GetCapabilities(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetCapabilities*
 
 void ProcGetCapabilities(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetCapabilities].rst != NULL) {
 		MsgBaseGetCapabilities* msg = ((MsgBaseGetCapabilities*)(s->result[EMESS_GetCapabilities].rst));
 
@@ -858,8 +884,7 @@ void ProcGetCapabilities(XXRFIDCLient* s, unsigned char* buf)
 
 int SetPower(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetPower* msg)
 {
-	if (msg == NULL) {
-		LOG_TICK("msg == NULL");
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -897,8 +922,11 @@ int SetPower(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetPower* msg)
 
 void ProcSetPower(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_SetPower].rst != NULL) {
 		MsgBaseSetPower* msg = ((MsgBaseSetPower*)(s->result[EMESS_SetPower].rst));
 
@@ -927,7 +955,7 @@ void ProcSetPower(XXRFIDCLient* s, unsigned char* buf)
 
 int GetPower(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetPower* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -953,6 +981,10 @@ int GetPower(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetPower* msg)
 
 void ProcGetPower(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_GetPower].rst == NULL) {
 		return ;
 	}
@@ -973,7 +1005,7 @@ void ProcGetPower(XXRFIDCLient* s, unsigned char* buf)
 
 int SetFreqRange(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetFreqRange* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1000,6 +1032,10 @@ int SetFreqRange(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetFreqRange* msg)
 
 void ProcSetFreqRange(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_SetFreqRange].rst == NULL) {
 		return ;
 	}
@@ -1024,7 +1060,7 @@ void ProcSetFreqRange(XXRFIDCLient* s, unsigned char* buf)
 
 int GetFreqRange(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetFreqRange* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1050,6 +1086,10 @@ int GetFreqRange(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetFreqRange* msg)
 
 void ProcGetFreqRange(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_GetFreqRange].rst == NULL) {
 		return ;
 	}
@@ -1064,8 +1104,7 @@ void ProcGetFreqRange(XXRFIDCLient* s, unsigned char* buf)
 
 int SetBaseband(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetBaseband* msg)
 {
-	if (msg == NULL) {
-		LOG_TICK("msg == NULL");
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1115,6 +1154,10 @@ int SetBaseband(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetBaseband* msg)
 
 void ProcSetBaseband(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_SetBaseband].rst == NULL) {
 		return ;
 	}
@@ -1155,7 +1198,7 @@ void ProcSetBaseband(XXRFIDCLient* s, unsigned char* buf)
 
 int GetBaseband(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetBaseband* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1181,6 +1224,10 @@ int GetBaseband(XXRFIDCLient* s, unsigned char* buf, MsgBaseGetBaseband* msg)
 
 void ProcGetBaseband(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_GetBaseband].rst == NULL) {
 		return ;
 	}
@@ -1198,8 +1245,7 @@ void ProcGetBaseband(XXRFIDCLient* s, unsigned char* buf)
 
 int SetTagLog(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetTagLog* msg)
 {
-	if (msg == NULL) {
-		LOG_TICK("msg == NULL");
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1236,6 +1282,10 @@ int SetTagLog(XXRFIDCLient* s, unsigned char* buf, MsgBaseSetTagLog* msg)
 
 void ProcSetTagLog(XXRFIDCLient* s, unsigned char *buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_SetTagLog].rst == NULL) {
 		return ;
 	}
@@ -1260,7 +1310,7 @@ void ProcSetTagLog(XXRFIDCLient* s, unsigned char *buf)
 
 int GetTagLog(XXRFIDCLient* s, unsigned char *buf, MsgBaseGetTagLog* msg)
 {
-	if (msg == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1286,6 +1336,10 @@ int GetTagLog(XXRFIDCLient* s, unsigned char *buf, MsgBaseGetTagLog* msg)
 
 void ProcGetTagLog(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	if (s->result[EMESS_GetTagLog].rst == NULL) {
 		return ;
 	}
@@ -1302,7 +1356,7 @@ void ProcGetTagLog(XXRFIDCLient* s, unsigned char* buf)
 #if REGION("6b")
 int Inventory6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseInventory6b *msg)
 {
-	if (s == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1355,7 +1409,7 @@ int Inventory6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseInventory6b *msg)
 
 void ProcInventory6b(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -1395,7 +1449,7 @@ void ProcInventory6b(XXRFIDCLient* s, unsigned char* buf)
 
 void Proc6bDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -1432,14 +1486,14 @@ void Proc6bDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 
 void Proc6BReadFinish(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
+
 	LogBase6bOver msg;
 	memset(&msg, 0, sizeof(msg));
 
 	msg.rst = buf[2];
-
 	switch(msg.rst) {
 		case 0:
 			strcpy(msg.msg, "Single operation complete.");
@@ -1461,7 +1515,7 @@ void Proc6BReadFinish(XXRFIDCLient* s, unsigned char* buf)
 
 int Write6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseWrite6b *msg)
 {
-	if (s == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1509,7 +1563,7 @@ int Write6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseWrite6b *msg)
 
 void ProcWrite6b(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -1540,7 +1594,7 @@ void ProcWrite6b(XXRFIDCLient* s, unsigned char* buf)
 
 int Lock6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseLock6b *msg)
 {
-	if (s == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1580,7 +1634,7 @@ int Lock6b(XXRFIDCLient* s, unsigned char *buf, MsgBaseLock6b *msg)
 
 void ProcLock6b(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -1603,7 +1657,7 @@ void ProcLock6b(XXRFIDCLient* s, unsigned char* buf)
 
 int Lock6bGet(XXRFIDCLient* s, unsigned char *buf, MsgBaseLock6bGet *msg)
 {
-	if (s == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1643,7 +1697,7 @@ int Lock6bGet(XXRFIDCLient* s, unsigned char *buf, MsgBaseLock6bGet *msg)
 
 void ProcLock6bGet(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -1666,7 +1720,7 @@ void ProcLock6bGet(XXRFIDCLient* s, unsigned char* buf)
 
 int InventoryGB(XXRFIDCLient* s, unsigned char *buf, MsgBaseInventoryGb *msg)
 {
-	if (s == NULL) {
+	if (msg == NULL || s == NULL || s->result == NULL) {
 		return -1;
 	}
 
@@ -1727,7 +1781,7 @@ int InventoryGB(XXRFIDCLient* s, unsigned char *buf, MsgBaseInventoryGb *msg)
 
 void ProcInventoryGB(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 

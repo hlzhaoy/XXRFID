@@ -150,6 +150,33 @@ COM.cpp.s:
 	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/COM.cpp.s
 .PHONY : COM.cpp.s
 
+Client.o: Client.cpp.o
+
+.PHONY : Client.o
+
+# target to build an object file
+Client.cpp.o:
+	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/Client.cpp.o
+.PHONY : Client.cpp.o
+
+Client.i: Client.cpp.i
+
+.PHONY : Client.i
+
+# target to preprocess a source file
+Client.cpp.i:
+	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/Client.cpp.i
+.PHONY : Client.cpp.i
+
+Client.s: Client.cpp.s
+
+.PHONY : Client.s
+
+# target to generate assembly for a file
+Client.cpp.s:
+	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/Client.cpp.s
+.PHONY : Client.cpp.s
+
 MessageProc.o: MessageProc.cpp.o
 
 .PHONY : MessageProc.o
@@ -393,33 +420,6 @@ result.cpp.s:
 	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/result.cpp.s
 .PHONY : result.cpp.s
 
-select.o: select.cpp.o
-
-.PHONY : select.o
-
-# target to build an object file
-select.cpp.o:
-	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/select.cpp.o
-.PHONY : select.cpp.o
-
-select.i: select.cpp.i
-
-.PHONY : select.i
-
-# target to preprocess a source file
-select.cpp.i:
-	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/select.cpp.i
-.PHONY : select.cpp.i
-
-select.s: select.cpp.s
-
-.PHONY : select.s
-
-# target to generate assembly for a file
-select.cpp.s:
-	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/select.cpp.s
-.PHONY : select.cpp.s
-
 socket.o: socket.cpp.o
 
 .PHONY : socket.o
@@ -459,6 +459,9 @@ help:
 	@echo "... COM.o"
 	@echo "... COM.i"
 	@echo "... COM.s"
+	@echo "... Client.o"
+	@echo "... Client.i"
+	@echo "... Client.s"
 	@echo "... MessageProc.o"
 	@echo "... MessageProc.i"
 	@echo "... MessageProc.s"
@@ -486,9 +489,6 @@ help:
 	@echo "... result.o"
 	@echo "... result.i"
 	@echo "... result.s"
-	@echo "... select.o"
-	@echo "... select.i"
-	@echo "... select.s"
 	@echo "... socket.o"
 	@echo "... socket.i"
 	@echo "... socket.s"

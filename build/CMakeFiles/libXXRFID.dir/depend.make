@@ -12,6 +12,13 @@ CMakeFiles/libXXRFID.dir/COM.cpp.o: ../protocol.h
 CMakeFiles/libXXRFID.dir/COM.cpp.o: ../pub.h
 CMakeFiles/libXXRFID.dir/COM.cpp.o: ../select.h
 
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../Client.cpp
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../XXRFID.h
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../client.h
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../delegate.h
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../protocol.h
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../pub.h
+
 CMakeFiles/libXXRFID.dir/MessageProc.cpp.o: ../MessageProc.cpp
 CMakeFiles/libXXRFID.dir/MessageProc.cpp.o: ../RFIDProtocol.h
 CMakeFiles/libXXRFID.dir/MessageProc.cpp.o: ../ReaderProtocol.h
@@ -32,6 +39,7 @@ CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o: ../result.h
 
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../Server.cpp
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../XXRFID.h
+CMakeFiles/libXXRFID.dir/Server.cpp.o: ../client.h
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../delegate.h
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../protocol.h
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../pub.h
@@ -52,6 +60,7 @@ CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../Server.h
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../USB.h
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../XXRFID.cpp
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../XXRFID.h
+CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../client.h
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../delegate.h
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../message.h
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../protocol.h
@@ -75,15 +84,6 @@ CMakeFiles/libXXRFID.dir/result.cpp.o: ../delegate.h
 CMakeFiles/libXXRFID.dir/result.cpp.o: ../message.h
 CMakeFiles/libXXRFID.dir/result.cpp.o: ../result.cpp
 CMakeFiles/libXXRFID.dir/result.cpp.o: ../result.h
-
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../COM.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../XXRFID.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../delegate.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../list.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../protocol.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../pub.h
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../select.cpp
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../socket.h
 
 CMakeFiles/libXXRFID.dir/socket.cpp.o: ../XXRFID.h
 CMakeFiles/libXXRFID.dir/socket.cpp.o: ../delegate.h

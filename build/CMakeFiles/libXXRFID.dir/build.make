@@ -177,33 +177,9 @@ CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o.provides: CMakeFiles/libXXRFID.dir/R
 CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o
 
 
-CMakeFiles/libXXRFID.dir/select.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
-CMakeFiles/libXXRFID.dir/select.cpp.o: ../select.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/libXXRFID.dir/select.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/select.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/select.cpp
-
-CMakeFiles/libXXRFID.dir/select.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/libXXRFID.dir/select.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/hgfs/VMShare/XXRFID_Linux/select.cpp > CMakeFiles/libXXRFID.dir/select.cpp.i
-
-CMakeFiles/libXXRFID.dir/select.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/libXXRFID.dir/select.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/hgfs/VMShare/XXRFID_Linux/select.cpp -o CMakeFiles/libXXRFID.dir/select.cpp.s
-
-CMakeFiles/libXXRFID.dir/select.cpp.o.requires:
-
-.PHONY : CMakeFiles/libXXRFID.dir/select.cpp.o.requires
-
-CMakeFiles/libXXRFID.dir/select.cpp.o.provides: CMakeFiles/libXXRFID.dir/select.cpp.o.requires
-	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/select.cpp.o.provides.build
-.PHONY : CMakeFiles/libXXRFID.dir/select.cpp.o.provides
-
-CMakeFiles/libXXRFID.dir/select.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/select.cpp.o
-
-
 CMakeFiles/libXXRFID.dir/Server.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/Server.cpp.o: ../Server.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/libXXRFID.dir/Server.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/libXXRFID.dir/Server.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/Server.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/Server.cpp
 
 CMakeFiles/libXXRFID.dir/Server.cpp.i: cmake_force
@@ -227,7 +203,7 @@ CMakeFiles/libXXRFID.dir/Server.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/S
 
 CMakeFiles/libXXRFID.dir/socket.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/socket.cpp.o: ../socket.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/libXXRFID.dir/socket.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/libXXRFID.dir/socket.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/socket.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/socket.cpp
 
 CMakeFiles/libXXRFID.dir/socket.cpp.i: cmake_force
@@ -251,7 +227,7 @@ CMakeFiles/libXXRFID.dir/socket.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/s
 
 CMakeFiles/libXXRFID.dir/USB.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/USB.cpp.o: ../USB.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/libXXRFID.dir/USB.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/libXXRFID.dir/USB.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/USB.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/USB.cpp
 
 CMakeFiles/libXXRFID.dir/USB.cpp.i: cmake_force
@@ -275,7 +251,7 @@ CMakeFiles/libXXRFID.dir/USB.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/USB.
 
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.o: ../XXRFID.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/libXXRFID.dir/XXRFID.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/libXXRFID.dir/XXRFID.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/XXRFID.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.cpp
 
 CMakeFiles/libXXRFID.dir/XXRFID.cpp.i: cmake_force
@@ -299,7 +275,7 @@ CMakeFiles/libXXRFID.dir/XXRFID.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/X
 
 CMakeFiles/libXXRFID.dir/hid.c.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/hid.c.o: ../hid.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building C object CMakeFiles/libXXRFID.dir/hid.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/libXXRFID.dir/hid.c.o"
 	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/libXXRFID.dir/hid.c.o   -c /mnt/hgfs/VMShare/XXRFID_Linux/hid.c
 
 CMakeFiles/libXXRFID.dir/hid.c.i: cmake_force
@@ -323,7 +299,7 @@ CMakeFiles/libXXRFID.dir/hid.c.o.provides.build: CMakeFiles/libXXRFID.dir/hid.c.
 
 CMakeFiles/libXXRFID.dir/pub.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
 CMakeFiles/libXXRFID.dir/pub.cpp.o: ../pub.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/libXXRFID.dir/pub.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/libXXRFID.dir/pub.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/pub.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/pub.cpp
 
 CMakeFiles/libXXRFID.dir/pub.cpp.i: cmake_force
@@ -345,6 +321,30 @@ CMakeFiles/libXXRFID.dir/pub.cpp.o.provides: CMakeFiles/libXXRFID.dir/pub.cpp.o.
 CMakeFiles/libXXRFID.dir/pub.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/pub.cpp.o
 
 
+CMakeFiles/libXXRFID.dir/Client.cpp.o: CMakeFiles/libXXRFID.dir/flags.make
+CMakeFiles/libXXRFID.dir/Client.cpp.o: ../Client.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/libXXRFID.dir/Client.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/libXXRFID.dir/Client.cpp.o -c /mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp
+
+CMakeFiles/libXXRFID.dir/Client.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/libXXRFID.dir/Client.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp > CMakeFiles/libXXRFID.dir/Client.cpp.i
+
+CMakeFiles/libXXRFID.dir/Client.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/libXXRFID.dir/Client.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp -o CMakeFiles/libXXRFID.dir/Client.cpp.s
+
+CMakeFiles/libXXRFID.dir/Client.cpp.o.requires:
+
+.PHONY : CMakeFiles/libXXRFID.dir/Client.cpp.o.requires
+
+CMakeFiles/libXXRFID.dir/Client.cpp.o.provides: CMakeFiles/libXXRFID.dir/Client.cpp.o.requires
+	$(MAKE) -f CMakeFiles/libXXRFID.dir/build.make CMakeFiles/libXXRFID.dir/Client.cpp.o.provides.build
+.PHONY : CMakeFiles/libXXRFID.dir/Client.cpp.o.provides
+
+CMakeFiles/libXXRFID.dir/Client.cpp.o.provides.build: CMakeFiles/libXXRFID.dir/Client.cpp.o
+
+
 # Object files for target libXXRFID
 libXXRFID_OBJECTS = \
 "CMakeFiles/libXXRFID.dir/COM.cpp.o" \
@@ -352,13 +352,13 @@ libXXRFID_OBJECTS = \
 "CMakeFiles/libXXRFID.dir/MessageProc.cpp.o" \
 "CMakeFiles/libXXRFID.dir/result.cpp.o" \
 "CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o" \
-"CMakeFiles/libXXRFID.dir/select.cpp.o" \
 "CMakeFiles/libXXRFID.dir/Server.cpp.o" \
 "CMakeFiles/libXXRFID.dir/socket.cpp.o" \
 "CMakeFiles/libXXRFID.dir/USB.cpp.o" \
 "CMakeFiles/libXXRFID.dir/XXRFID.cpp.o" \
 "CMakeFiles/libXXRFID.dir/hid.c.o" \
-"CMakeFiles/libXXRFID.dir/pub.cpp.o"
+"CMakeFiles/libXXRFID.dir/pub.cpp.o" \
+"CMakeFiles/libXXRFID.dir/Client.cpp.o"
 
 # External object files for target libXXRFID
 libXXRFID_EXTERNAL_OBJECTS =
@@ -368,13 +368,13 @@ liblibXXRFID.so: CMakeFiles/libXXRFID.dir/list.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/MessageProc.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/result.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o
-liblibXXRFID.so: CMakeFiles/libXXRFID.dir/select.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/Server.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/socket.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/USB.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/XXRFID.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/hid.c.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/pub.cpp.o
+liblibXXRFID.so: CMakeFiles/libXXRFID.dir/Client.cpp.o
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/build.make
 liblibXXRFID.so: CMakeFiles/libXXRFID.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX shared library liblibXXRFID.so"
@@ -390,13 +390,13 @@ CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/list.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/MessageProc.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/result.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o.requires
-CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/select.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/Server.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/socket.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/USB.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/XXRFID.cpp.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/hid.c.o.requires
 CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/pub.cpp.o.requires
+CMakeFiles/libXXRFID.dir/requires: CMakeFiles/libXXRFID.dir/Client.cpp.o.requires
 
 .PHONY : CMakeFiles/libXXRFID.dir/requires
 

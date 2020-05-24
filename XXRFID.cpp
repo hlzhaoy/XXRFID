@@ -20,6 +20,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <unistd.h>
+#include "client.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +38,7 @@ int WriteCmd(XXRFIDCLient* client, unsigned char* buf, int len)
     switch(client->type)
     {
     case ETH:
-        ret = writeSocket(client->handle, buf, len);
+        ret = writeSocket(client, buf, len);
         break;
 
     case COM:
@@ -48,8 +49,8 @@ int WriteCmd(XXRFIDCLient* client, unsigned char* buf, int len)
 		ret = writeUSB((void*)client->handle, buf, len);
 		break;
 
-	case SERVER:
-		ret = WriteServer(client->handle, buf, len);
+	case CLIENT:
+		ret = WriteClient(client, buf, len);
 		break;
 
     default:
@@ -348,7 +349,9 @@ void SendSynMsg(XXRFIDCLient* s, MESSAGE type, void* msg)
 		}
 	}while(0);
 
-	s->result[type].rst = NULL;
+	if (s != NULL && s->result != NULL) {
+		s->result[type].rst = NULL;
+	}
 	pthread_mutex_unlock(&g_mutex);
 }
 
@@ -599,7 +602,7 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 
 		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
 		if (s == NULL) {
-			LOG_TICK("failed to new");
+			LOG_TICK("failed to malloc");
 			ret = -1;
 			break;
 		}
@@ -710,7 +713,7 @@ XXRFIDCLient* Open(short port)
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
 			if(threadIsStop == true) {
 				QueueInit();
-				SelectListInit();
+				// SelectListInit();
 				threadIsStop = false;
 				pthread_t threadID = 0;
 				int res = pthread_create(&threadID, NULL, messageProcThread, NULL);

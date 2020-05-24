@@ -12,6 +12,13 @@ CMakeFiles/libXXRFID.dir/COM.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/protocol.h
  /mnt/hgfs/VMShare/XXRFID_Linux/pub.h
  /mnt/hgfs/VMShare/XXRFID_Linux/select.h
+CMakeFiles/libXXRFID.dir/Client.cpp.o
+ /mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp
+ /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/client.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/protocol.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/pub.h
 CMakeFiles/libXXRFID.dir/MessageProc.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/MessageProc.cpp
  /mnt/hgfs/VMShare/XXRFID_Linux/RFIDProtocol.h
@@ -33,6 +40,7 @@ CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o
 CMakeFiles/libXXRFID.dir/Server.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/Server.cpp
  /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/client.h
  /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
  /mnt/hgfs/VMShare/XXRFID_Linux/protocol.h
  /mnt/hgfs/VMShare/XXRFID_Linux/pub.h
@@ -53,6 +61,7 @@ CMakeFiles/libXXRFID.dir/XXRFID.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/USB.h
  /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.cpp
  /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
+ /mnt/hgfs/VMShare/XXRFID_Linux/client.h
  /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
  /mnt/hgfs/VMShare/XXRFID_Linux/message.h
  /mnt/hgfs/VMShare/XXRFID_Linux/protocol.h
@@ -76,15 +85,6 @@ CMakeFiles/libXXRFID.dir/result.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/message.h
  /mnt/hgfs/VMShare/XXRFID_Linux/result.cpp
  /mnt/hgfs/VMShare/XXRFID_Linux/result.h
-CMakeFiles/libXXRFID.dir/select.cpp.o
- /mnt/hgfs/VMShare/XXRFID_Linux/COM.h
- /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
- /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
- /mnt/hgfs/VMShare/XXRFID_Linux/list.h
- /mnt/hgfs/VMShare/XXRFID_Linux/protocol.h
- /mnt/hgfs/VMShare/XXRFID_Linux/pub.h
- /mnt/hgfs/VMShare/XXRFID_Linux/select.cpp
- /mnt/hgfs/VMShare/XXRFID_Linux/socket.h
 CMakeFiles/libXXRFID.dir/socket.cpp.o
  /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
  /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h

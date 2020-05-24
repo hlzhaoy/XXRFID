@@ -14,6 +14,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
   )
 set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/hgfs/VMShare/XXRFID_Linux/COM.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/COM.cpp.o"
+  "/mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/Client.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/MessageProc.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/MessageProc.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/RFIDProtocol.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/RFIDProtocol.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/Server.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/Server.cpp.o"
@@ -22,7 +23,6 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/mnt/hgfs/VMShare/XXRFID_Linux/list.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/list.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/pub.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/pub.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/result.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/result.cpp.o"
-  "/mnt/hgfs/VMShare/XXRFID_Linux/select.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/select.cpp.o"
   "/mnt/hgfs/VMShare/XXRFID_Linux/socket.cpp" "/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir/socket.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

@@ -42,6 +42,30 @@ string.h
 
 /mnt/hgfs/VMShare/XXRFID_Linux/COM.h
 
+/mnt/hgfs/VMShare/XXRFID_Linux/Client.cpp
+XXRFID.h
+/mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
+pub.h
+/mnt/hgfs/VMShare/XXRFID_Linux/pub.h
+string.h
+-
+unistd.h
+-
+client.h
+/mnt/hgfs/VMShare/XXRFID_Linux/client.h
+sys/types.h
+-
+sys/socket.h
+-
+stdlib.h
+-
+errno.h
+-
+pthread.h
+-
+sys/time.h
+-
+
 /mnt/hgfs/VMShare/XXRFID_Linux/MessageProc.cpp
 pub.h
 /mnt/hgfs/VMShare/XXRFID_Linux/pub.h
@@ -52,6 +76,8 @@ RFIDProtocol.h
 delegate.h
 /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
 stdio.h
+-
+sys/time.h
 -
 
 /mnt/hgfs/VMShare/XXRFID_Linux/RFIDProtocol.cpp
@@ -105,6 +131,16 @@ string.h
 -
 unistd.h
 -
+errno.h
+-
+stdlib.h
+-
+stdio.h
+-
+pthread.h
+-
+client.h
+/mnt/hgfs/VMShare/XXRFID_Linux/client.h
 
 /mnt/hgfs/VMShare/XXRFID_Linux/Server.h
 XXRFID.h
@@ -189,6 +225,8 @@ unistd.h
 -
 unistd.h
 -
+client.h
+/mnt/hgfs/VMShare/XXRFID_Linux/client.h
 
 /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
 delegate.h
@@ -197,6 +235,8 @@ semaphore.h
 -
 stdbool.h
 -
+
+/mnt/hgfs/VMShare/XXRFID_Linux/client.h
 
 /mnt/hgfs/VMShare/XXRFID_Linux/delegate.h
 
@@ -262,34 +302,6 @@ message.h
 XXRFID.h
 /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
 
-/mnt/hgfs/VMShare/XXRFID_Linux/select.cpp
-list.h
-/mnt/hgfs/VMShare/XXRFID_Linux/list.h
-sys/types.h
--
-XXRFID.h
-/mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
-errno.h
--
-pub.h
-/mnt/hgfs/VMShare/XXRFID_Linux/pub.h
-COM.h
-/mnt/hgfs/VMShare/XXRFID_Linux/COM.h
-socket.h
-/mnt/hgfs/VMShare/XXRFID_Linux/socket.h
-string.h
--
-stdlib.h
--
-stdio.h
--
-pthread.h
--
-sys/types.h
--
-sys/socket.h
--
-
 /mnt/hgfs/VMShare/XXRFID_Linux/select.h
 XXRFID.h
 /mnt/hgfs/VMShare/XXRFID_Linux/XXRFID.h
@@ -320,6 +332,10 @@ netinet/in.h
 stdbool.h
 -
 unistd.h
+-
+pthread.h
+-
+sys/time.h
 -
 
 /mnt/hgfs/VMShare/XXRFID_Linux/socket.h

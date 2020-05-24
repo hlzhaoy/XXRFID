@@ -9,7 +9,6 @@ extern "C" {
 
 int OpenServer(short port);
 int StartServer(XXRFIDCLient* client);
-int WriteServer(int handle, unsigned char *buf, int len);
 int CloseServer(XXRFIDCLient* client);
 
 #ifdef __cplusplus

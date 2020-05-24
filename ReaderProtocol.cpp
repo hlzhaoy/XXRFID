@@ -14,8 +14,11 @@
 
 int Reset(XXRFIDCLient* s, unsigned char* buf)
 {
-	unsigned short dataLen = 0, len = 0;
+	if (s == NULL || s->result == NULL) {
+		return -1;
+	}
 
+	unsigned short dataLen = 0, len = 0;
 	buf[0] = FRAMEHEAD;
 	len += 1;
 
@@ -35,12 +38,11 @@ int Reset(XXRFIDCLient* s, unsigned char* buf)
 
 int SetSerialParam(XXRFIDCLient* s, unsigned char* buf, MsgAppSetSerialParam* para)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if (para == NULL) {
+	if (s == NULL || s->result == NULL || para == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_SetSerialParam].rst = (void*)para;
 
 	buf[0] = FRAMEHEAD;
@@ -77,8 +79,11 @@ int SetSerialParam(XXRFIDCLient* s, unsigned char* buf, MsgAppSetSerialParam* pa
 
 void ProcSetSerialParam(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_SetSerialParam].rst != NULL) {
 
 		((MsgAppSetSerialParam*)(s->result[EMESS_SetSerialParam].rst))->rst.RtCode = buf[index];
@@ -93,12 +98,11 @@ void ProcSetSerialParam(XXRFIDCLient* s, unsigned char* buf)
 
 int GetSerialParam(XXRFIDCLient* s, unsigned char* buf, MsgAppGetSerialParam* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_GetSerialParam].rst = (void*)msg;
 
 	buf[0] = FRAMEHEAD;
@@ -120,8 +124,11 @@ int GetSerialParam(XXRFIDCLient* s, unsigned char* buf, MsgAppGetSerialParam* ms
 
 void ProcGetSerialParam(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetSerialParam].rst != NULL) {
 		((MsgAppGetSerialParam*)(s->result[EMESS_GetSerialParam].rst))->BaudrateIndex = buf[index];
 	}
@@ -148,12 +155,11 @@ int FillGpoState(unsigned char* buf, MsgAppSetGpo* msg)
 
 int SetGpo(XXRFIDCLient* s, unsigned char* buf, MsgAppSetGpo* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if(msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_SetGpo].rst = (void*)msg;
 
 	buf[0] = FRAMEHEAD;
@@ -179,8 +185,11 @@ int SetGpo(XXRFIDCLient* s, unsigned char* buf, MsgAppSetGpo* msg)
 
 void ProcSetGpo(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_SetGpo].rst != NULL) {
 		((MsgAppSetGpo*)(s->result[EMESS_SetGpo].rst))->rst.RtCode = buf[index];
 
@@ -194,12 +203,11 @@ void ProcSetGpo(XXRFIDCLient* s, unsigned char* buf)
 
 int GetGpiState(XXRFIDCLient* s, unsigned char* buf, MsgAppGetGpiState* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_GetGpiState].rst = (void*)msg;
 
 	buf[0] = FRAMEHEAD;
@@ -221,8 +229,11 @@ int GetGpiState(XXRFIDCLient* s, unsigned char* buf, MsgAppGetGpiState* msg)
 
 void ProcGetGpiState(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetGpiState].rst != NULL) {
         MsgAppGetGpiState* msg = (MsgAppGetGpiState*)(s->result[EMESS_GetGpiState].rst);
 		msg->Gpi1 = buf[3];
@@ -236,12 +247,11 @@ void ProcGetGpiState(XXRFIDCLient* s, unsigned char* buf)
 
 int SetGpiTrigger(XXRFIDCLient* s, unsigned char* buf, MsgAppSetGpiTrigger* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if(msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_SetGpiTrigger].rst = (void*)msg;
 
 	buf[len++] = FRAMEHEAD;
@@ -290,8 +300,11 @@ int SetGpiTrigger(XXRFIDCLient* s, unsigned char* buf, MsgAppSetGpiTrigger* msg)
 
 void ProcSetGpiTrigger(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_SetGpiTrigger].rst != NULL) {
 		((MsgAppSetGpiTrigger*)(s->result[EMESS_SetGpiTrigger].rst))->rst.RtCode = buf[index];
 
@@ -314,7 +327,7 @@ void ProcSetGpiTrigger(XXRFIDCLient* s, unsigned char* buf)
 
 void ProcGpiTriggerStart(XXRFIDCLient* s, unsigned char* buf)
 {
-	if (s == NULL) {
+	if (s == NULL || s->result == NULL) {
 		return;
 	}
 
@@ -339,6 +352,10 @@ void ProcGpiTriggerStart(XXRFIDCLient* s, unsigned char* buf)
 
 void ProcGpiTriggerOver(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
 	LogBaseGpiOver tmp;
 	memset(&tmp, 0, sizeof(tmp));
 	tmp.GpiPort = buf[2];
@@ -360,12 +377,11 @@ void ProcGpiTriggerOver(XXRFIDCLient* s, unsigned char* buf)
 
 int GetGpiTrigger(XXRFIDCLient* s, unsigned char* buf, MsgAppGetGpiTrigger* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_GetGpiTrigger].rst = (void*)msg;
 
 	buf[len++] = FRAMEHEAD;
@@ -389,8 +405,11 @@ int GetGpiTrigger(XXRFIDCLient* s, unsigned char* buf, MsgAppGetGpiTrigger* msg)
 
 void ProcGetGpiTrigger(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetGpiTrigger].rst != NULL) {
 		MsgAppGetGpiTrigger* tmp = (MsgAppGetGpiTrigger*)(s->result[EMESS_GetGpiTrigger].rst);
 
@@ -431,12 +450,11 @@ int StringIpToInt(char* ip)
 
 int SetEthernetIp(XXRFIDCLient* s, unsigned char* buf, MsgAppSetEthernetIP* msg)
 {
-	unsigned short dataLen = 0, len = 0;
-
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
+	unsigned short dataLen = 0, len = 0;
 	s->result[EMESS_SetEthernetIp].rst = (void*)msg;
 
 	buf[len++] = FRAMEHEAD;
@@ -510,8 +528,11 @@ int SetEthernetIp(XXRFIDCLient* s, unsigned char* buf, MsgAppSetEthernetIP* msg)
 
 void ProcSetEthernetIp(XXRFIDCLient* s, unsigned char* buf)
 {
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+	
 	int index = 2;
-
 	if (s->result[EMESS_SetEthernetIp].rst != NULL) {
 		MsgAppSetEthernetIP* tmp = (MsgAppSetEthernetIP*)(s->result[EMESS_SetEthernetIp].rst);
 
@@ -526,7 +547,7 @@ void ProcSetEthernetIp(XXRFIDCLient* s, unsigned char* buf)
 
 int GetEthernetIp(XXRFIDCLient* s, unsigned char* buf, MsgAppGetEthernetIP* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -567,8 +588,11 @@ int Char2Int(unsigned char* str, int len)
 
 void ProcGetEthernetIp(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetEthernetIp].rst != NULL) {
 		MsgAppGetEthernetIP* msg = (MsgAppGetEthernetIP*)(s->result[EMESS_GetEthernetIp].rst);
 
@@ -600,7 +624,7 @@ void ProcGetEthernetIp(XXRFIDCLient* s, unsigned char* buf)
 
 int GetEtherneMac(XXRFIDCLient* s, unsigned char * buf, MsgAppGetEthernetMac* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -626,8 +650,11 @@ int GetEtherneMac(XXRFIDCLient* s, unsigned char * buf, MsgAppGetEthernetMac* ms
 
 void ProcGetEthernetMac(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetEthernetMac].rst != NULL) {
 		MsgAppGetEthernetMac* msg = (MsgAppGetEthernetMac*)(s->result[EMESS_GetEthernetMac].rst);
 
@@ -642,7 +669,7 @@ void ProcGetEthernetMac(XXRFIDCLient* s, unsigned char* buf)
 
 int SetTcpMode(XXRFIDCLient* s, unsigned char* buf, MsgAppSetTcpMode* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -701,8 +728,11 @@ int SetTcpMode(XXRFIDCLient* s, unsigned char* buf, MsgAppSetTcpMode* msg)
 
 void ProcSetTcpMode(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_SetTcpMode].rst != NULL) {
 		MsgAppSetTcpMode* msg = (MsgAppSetTcpMode*)(s->result[EMESS_SetTcpMode].rst);
 
@@ -717,7 +747,7 @@ void ProcSetTcpMode(XXRFIDCLient* s, unsigned char* buf)
 
 int GetTcpMode(XXRFIDCLient* s, unsigned char* buf, MsgAppGetTcpMode* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -743,8 +773,11 @@ int GetTcpMode(XXRFIDCLient* s, unsigned char* buf, MsgAppGetTcpMode* msg)
 
 void ProcGetTcpMode(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetTcpMode].rst != NULL) {
 		MsgAppGetTcpMode* msg = (MsgAppGetTcpMode*)(s->result[EMESS_GetTcpMode].rst);
 
@@ -765,7 +798,7 @@ void ProcGetTcpMode(XXRFIDCLient* s, unsigned char* buf)
 
 int GetBaseVersion(XXRFIDCLient* s, unsigned char* buf, MsgAppGetBaseVersion* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -791,8 +824,11 @@ int GetBaseVersion(XXRFIDCLient* s, unsigned char* buf, MsgAppGetBaseVersion* ms
 
 void ProcGetBaseVersion(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetBaseVersion].rst != NULL) {
 		MsgAppGetBaseVersion* msg = (MsgAppGetBaseVersion*)(s->result[EMESS_GetBaseVersion].rst);
 
@@ -804,7 +840,7 @@ void ProcGetBaseVersion(XXRFIDCLient* s, unsigned char* buf)
 
 int GetReaderInfo(XXRFIDCLient* s, unsigned char* buf, MsgAppGetReaderInfo* msg)
 {
-	if (msg == NULL) {
+	if (s == NULL || s->result == NULL || msg == NULL) {
 		return -1;
 	}
 
@@ -830,8 +866,11 @@ int GetReaderInfo(XXRFIDCLient* s, unsigned char* buf, MsgAppGetReaderInfo* msg)
 
 void ProcGetReaderInfo(XXRFIDCLient* s, unsigned char* buf)
 {
-	int index = 2;
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
 
+	int index = 2;
 	if (s->result[EMESS_GetReaderInfo].rst != NULL) {
 		MsgAppGetReaderInfo* msg = (MsgAppGetReaderInfo*)(s->result[EMESS_GetReaderInfo].rst);
 

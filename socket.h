@@ -7,9 +7,9 @@
 
 int initSocket(char* ip, char* port, int timeout);
 
-int writeSocket(int handle, unsigned char* buf, int len);
+int writeSocket(XXRFIDCLient *client, unsigned char* buf, int len);
 
-int readSocket(int handle, unsigned char* buf, int len);
+int readSocket(XXRFIDCLient *client, unsigned char* buf, int len);
 
 void StartSocket(XXRFIDCLient *client);
 

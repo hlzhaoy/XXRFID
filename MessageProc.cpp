@@ -3,6 +3,7 @@
 #include "RFIDProtocol.h"
 #include "delegate.h"
 #include <stdio.h>
+#include <sys/time.h>
 
 #ifdef __cplusplus
 	extern "C" {
@@ -24,8 +25,15 @@ void ProcConnectState(XXRFIDCLient* client, unsigned char* rcv)
 void messageProc(serialData data)
 {
 	try {
-		unsigned char MType = data.data[3];
+		struct timeval tv;
+		int ret = gettimeofday(&tv, NULL);
+		if (ret != 0) {
+			LOG_TICK("failed to gettimeofday");
+			return ;
+		}
+		data.s->tick = tv.tv_sec;
 
+		unsigned char MType = data.data[3];
 		char *tmp = HexToString(data.data, data.len);
 		LOG_TICK(tmp);
 		delete []tmp;

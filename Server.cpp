@@ -11,21 +11,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <pthread.h>
+#include "client.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /*
-* accepte线程
+* accept线程
 */
-static bool g_accepteThreadIsStop = true;
-static pthread_t g_acceptThreadId = 0;
 void* ServerThread(void* lpParam) 
 {
 	XXRFIDCLient* client  = (XXRFIDCLient*)lpParam;
 
-	while (g_accepteThreadIsStop == false) {
+	while (client->threadIsStop == false) {
 		int s = accept(client->handle, NULL, NULL);
 		if (s == -1) {
 			char tmp[128] = {0};
@@ -34,22 +33,45 @@ void* ServerThread(void* lpParam)
 			usleep(50);
 			continue;
 		}
-		LOG_TICK("accept");
 
 		XXRFIDCLient* tmp = (XXRFIDCLient*)malloc(sizeof(*tmp));
 		memset(tmp, 0, sizeof(tmp));
-		memcpy(tmp, client, sizeof(*tmp));
+		
+		tmp->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
+		if (tmp->sem == NULL) {
+			LOG_TICK("failed to malloc");
+			exit(0);
+		}
+
+		memset(tmp->sem, 0, sizeof(sem_t) * EMESS_Count);
+		for (int i = 0; i < EMESS_Count; i++) {
+			sem_init(&tmp->sem[i], 0, 0);
+		}
+
+		tmp->result = (MessageResult*)malloc(sizeof(MessageResult) * EMESS_Count);
+		if (tmp->result == NULL) {
+			LOG_TICK("failed to malloc");
+			exit(0);
+		}
+		memset(tmp->result, 0, sizeof(MessageResult) * EMESS_Count);
+
+		tmp->data = (unsigned char*)malloc(1024);
+		if (tmp->data == NULL) {
+			LOG_TICK("failed to malloc");
+			exit(0);
+		}
 
 		tmp->data = (unsigned char*)malloc(1024);
 		memset(tmp->data, 0, 1024);
 		tmp->handle = s;
 
-		InsertSelectList(tmp);		
-		CreateSelectThread();
+		tmp->type = CLIENT;
 
 		if (client->call_GClientConnected != NULL) {
-			client->call_GClientConnected((char*)"a new connect");
+			client->call_GClientConnected(tmp);
 		}
+
+		StartClient(tmp);
 
 		usleep(50);
 	}
@@ -57,9 +79,11 @@ void* ServerThread(void* lpParam)
 
 int StartServer(XXRFIDCLient* client)
 {
-	g_accepteThreadIsStop = false;
+	pthread_t g_acceptThreadId;
+	client->threadIsStop = false;
 	int ret = pthread_create(&g_acceptThreadId, NULL, ServerThread, (void*)client);
 	if (ret != 0) {
+		client->threadIsStop = true;
 		LOG_TICK("failed to pthread_create");
 	} else {
 		pthread_detach(g_acceptThreadId);
@@ -92,14 +116,9 @@ int OpenServer(short port)
 	return handle;
 }
 
-int WriteServer(int handle, unsigned char *buf, int len)
-{
-	return WriteSocket(buf, len);
-}
-
 int CloseServer(XXRFIDCLient* client)
 {
-	g_accepteThreadIsStop = true;
+	client->threadIsStop = true;
     close(client->handle);
     client->handle;
 	

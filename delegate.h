@@ -55,6 +55,9 @@ typedef struct {
 typedef void (*delegateTagGbLog)(LogBaseGbInfo msg);
 
 typedef void (*delegateTcpDisconnected)(char* msg);
-typedef void (*delegateGClientConnected)(char* msg);
+
+/* 声明结构体XXRFIDCLient */
+struct XXRFIDCLient;
+typedef void (*delegateGClientConnected)(XXRFIDCLient *client);
 
 #endif // DELEGATE_H
