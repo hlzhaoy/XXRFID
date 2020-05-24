@@ -74,8 +74,6 @@ typedef enum {
     OTHER = 1000
 }ConnType;
 
-#define BUF_LINE 1024
-
 typedef struct {
 	void* rst;
 }MessageResult;

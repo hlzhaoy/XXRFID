@@ -14,6 +14,8 @@
 #define LOG_TICK
 #endif
 
+#define BUF_LINE 1024
+
 typedef enum {
     SUCCESS = 0,   //函数执行成功
     ADDRERR,       //连接地址参数错误

@@ -139,6 +139,11 @@ int cleanUSB(XXRFIDCLient* client)
 	threadIsStop = true;
 	pthread_join(threadID, NULL);
 
+	free(client->data);
+	free(client->sem);
+	free(client->result);
+	free(client);
+
 	return 0;
 }
 

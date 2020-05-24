@@ -15,10 +15,9 @@ void ProcError(unsigned char* buf)
 
 void ProcConnectState(XXRFIDCLient* client, unsigned char* rcv)
 {
-    unsigned char buf[32] = {0};
+    unsigned char buf[128] = {0};
     int len = 0;
     getConnectStateCmd(buf, &len, rcv);
-	LOG_TICK("ProcConnectState");
     WriteCmd(client, buf, len);
 }
 

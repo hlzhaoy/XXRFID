@@ -11,15 +11,9 @@ extern "C" {
 
 void CreateSelectThread();
 void InsertSelectList(XXRFIDCLient* client);
-int ExitSelectThread(XXRFIDCLient* client);
 void SelectListInit();
-
-#if REGION("接收到的socket连接")
-void SocketListInit();
-void InsertSocketList(int s);
-void DelFromSocketList(int s);
-int WriteServerSocket(unsigned char* wbuf, int len);
-#endif
+int WriteSocket(unsigned char* buf, int len);
+void cleanSelectList();
 
 #ifdef __cplusplus
 }

@@ -49,7 +49,7 @@ int WriteCmd(XXRFIDCLient* client, unsigned char* buf, int len)
 		break;
 
 	case SERVER:
-		ret = WriteServerSocket(buf, len);
+		ret = WriteServer(client->handle, buf, len);
 		break;
 
     default:
@@ -399,7 +399,6 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
 			if (threadIsStop == true) {
 				QueueInit();
-				SelectListInit();
 				threadIsStop = false;
 				pthread_t threadID;
 				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
@@ -501,7 +500,6 @@ XXRFIDCLient* OpenUSB(int timeout)
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
 			if(threadIsStop == true) {
 				QueueInit();
-				SelectListInit();
 				threadIsStop = false;
 				pthread_t threadID;
 				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
@@ -613,7 +611,6 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
 			if(threadIsStop == true) {
 				QueueInit();
-				SelectListInit();
 				threadIsStop = false;
 				pthread_t threadID;
 				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
@@ -671,15 +668,18 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 			free(s->sem);
 		}
 
+		if (s->data != NULL) {
+			free(s->data);
+		}
+
+		free(s);
+
 		return NULL;
 	}
 
-	LOG_TICK("CreateSelectThread");
-	CreateSelectThread();
-
 	s->type = ETH;
 	s->isOpened = true;
-	InsertSelectList(s);
+	StartSocket(s);
 
     return s;
 }
@@ -747,12 +747,6 @@ XXRFIDCLient* Open(short port)
 		}
 		memset(client->result, 0, sizeof(MessageResult) * EMESS_Count);
 
-		client->data = (unsigned char*)malloc(1024);
-		if (client->data == NULL) {
-			ret = -1;
-			LOG_TICK("failed to malloc");
-			break;
-		}
 	} while (false);
 
 	if (ret < 0) {
@@ -764,14 +758,13 @@ XXRFIDCLient* Open(short port)
 			free(client->sem);
 		}
 
+		free(client);
+
 		return NULL;
 	}
 
-	SocketListInit();
-
 	client->isOpened = true;
-	CreateSelectThread();
-	InsertSelectList(client);
+	StartServer(client);
 
 	return client;
 }
@@ -788,24 +781,18 @@ void Close(XXRFIDCLient* s)
         ret = cleanCom(s);
     }
 
+	else if (g_ConnType == USB) {
+		ret = cleanUSB(s);
+	}
+
     else {
-        ret = CleanServer(s);
+        ret = CloseServer(s);
     }
 
     if(ret > 0) {
         threadIsStop = true; 
         // WaitForSingleObject(procThreadHandle, INFINITE);
     }
-
-	s->isOpened = false;
-	free(s->data);
-	s->data = NULL;
-
-	free(s->sem);
-	s->sem = NULL;
-
-	free(s->result);
-	s->result = NULL;
 
     return;
 }
