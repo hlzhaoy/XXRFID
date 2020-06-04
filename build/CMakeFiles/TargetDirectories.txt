@@ -1,3 +1,0 @@
-/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/rebuild_cache.dir
-/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/libXXRFID.dir
-/mnt/hgfs/VMShare/XXRFID_Linux/build/CMakeFiles/edit_cache.dir

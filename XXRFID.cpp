@@ -452,15 +452,15 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 	} while (false) ;
 
 	if (ret < 0) {
-		if (s->result != NULL) {
+		if (s != NULL && s->result != NULL) {
 			free(s->result);
 		}
 
-		if (s->sem != NULL) {
+		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
 		}
 
-		if (s->data != NULL) {
+		if (s != NULL && s->data != NULL) {
 			free(s->data);
 		}
 
@@ -552,15 +552,15 @@ XXRFIDCLient* OpenUSB(int timeout)
 	} while (false) ;
 
 	if (ret < 0) {
-		if (s->result != NULL) {
+		if (s != NULL && s->result != NULL) {
 			free(s->result);
 		}
 
-		if (s->sem != NULL) {
+		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
 		}
 
-		if (s->data != NULL) {
+		if (s != NULL && s->data != NULL) {
 			free(s->data);
 		}
 
@@ -593,6 +593,14 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 		ip[port - ip] = '\0';
 		port += 1;
 
+		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
+		if (s == NULL) {
+			LOG_TICK("failed to malloc");
+			ret = -1;
+			break;
+		}
+		memset(s, 0, sizeof(XXRFIDCLient));
+
 		g_ConnType = ETH;
 		handSocket = initSocket(ip, port, timeout);
 		if (handSocket == -1) {
@@ -600,14 +608,6 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 			break;
 		}
 
-		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
-		if (s == NULL) {
-			LOG_TICK("failed to malloc");
-			ret = -1;
-			break;
-		}
-
-		memset(s, 0, sizeof(XXRFIDCLient));
 		s->handle = handSocket;
 
 		if(threadIsStop == true) {
@@ -663,15 +663,15 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
     } while(false);
 
 	if (ret < 0) {
-		if (s->result != NULL) {
+		if (s != NULL && s->result != NULL) {
 			free(s->result);
 		}
 
-		if (s->sem != NULL) {
+		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
 		}
 
-		if (s->data != NULL) {
+		if (s != NULL && s->data != NULL) {
 			free(s->data);
 		}
 
@@ -753,11 +753,11 @@ XXRFIDCLient* Open(short port)
 	} while (false);
 
 	if (ret < 0) {
-		if (client->result != NULL) {
+		if (client != NULL && client->result != NULL) {
 			free(client->result);
 		}
 
-		if (client->sem != NULL) {
+		if (client != NULL && client->sem != NULL) {
 			free(client->sem);
 		}
 
