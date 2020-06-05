@@ -8,7 +8,7 @@
     extern "C" {
 #endif
 
-#if 1
+#if 0
 #define LOG_TICK(msg) Log(__FUNCTION__, __LINE__, msg);
 #else
 #define LOG_TICK
