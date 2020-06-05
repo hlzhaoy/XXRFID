@@ -15,7 +15,6 @@
 #include "select.h"
 #include "Server.h"
 #include <stdlib.h>
-#include "USB.h"
 #include <stdbool.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -44,10 +43,6 @@ int WriteCmd(XXRFIDCLient* client, unsigned char* buf, int len)
     case COM:
         ret = writeCom(client->handle, buf, len);
         break;
-
-	case USB:
-		ret = writeUSB((void*)client->handle, buf, len);
-		break;
 
 	case CLIENT:
 		ret = WriteClient(client, buf, len);
@@ -476,105 +471,6 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
     return s;
 }
 
-XXRFIDCLient* OpenUSB(int timeout)
-{
-	int ret = SUCCESS;
-	XXRFIDCLient* s = NULL;
-
-	do {
-		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
-		if (s == NULL) {
-			ret = -1;
-			LOG_TICK("failed to new");
-			break;
-		}
-
-		memset(s, 0, sizeof(XXRFIDCLient));
-		s->handle = (long)initUSB(timeout);
-
-		if((s->handle) == NULL) {
-			free(s);
-			return NULL;
-		}
-
-		g_ConnType = USB;
-
-		if(threadIsStop == true) {
-			pthread_mutex_lock(&g_MessageProcCreateMutex);
-			if(threadIsStop == true) {
-				QueueInit();
-				threadIsStop = false;
-				pthread_t threadID;
-				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
-				if ( ret != 0) {
-					ret = -1;
-					LOG_TICK("failed to pthread_create");
-					pthread_mutex_unlock(&g_MessageProcCreateMutex);
-					break;
-				} else {
-					pthread_detach(threadID);
-				}
-			}
-			pthread_mutex_unlock(&g_MessageProcCreateMutex);
-		}
-
-		s->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
-		if (s->sem == NULL) {
-			ret = -1;
-			LOG_TICK("failed to malloc");
-			break;
-		}
-
-		memset(s->sem, 0, sizeof(sem_t) * EMESS_Count);
-		for (int i = 0; i < EMESS_Count; i++) {
-			int res = sem_init(&s->sem[i], 0, 0);
-			if (res != 0) {
-				LOG_TICK("filed to sem_init");
-				ret = -1;
-				break;
-			}
-		}
-
-		s->result = (MessageResult*)malloc(sizeof(MessageResult) * EMESS_Count);
-		if (s->result == NULL) {
-			ret = -1;
-			LOG_TICK("failed to malloc");
-			break;
-		}
-		memset(s->result, 0, sizeof(MessageResult) * EMESS_Count);
-
-		s->data = (unsigned char*)malloc(1024);
-		if (s->data == NULL) {
-			ret = -1;
-			LOG_TICK("failed to malloc");
-			break;
-		}
-	} while (false) ;
-
-	if (ret < 0) {
-		if (s != NULL && s->result != NULL) {
-			free(s->result);
-		}
-
-		if (s != NULL && s->sem != NULL) {
-			free(s->sem);
-		}
-
-		if (s != NULL && s->data != NULL) {
-			free(s->data);
-		}
-
-		return NULL;
-	}
-
-	s->type = USB;
-	s->isOpened = true;
-
-	StartUSB(s);
-
-	return s;
-}
-
 XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 {
     int ret = SUCCESS;
@@ -783,10 +679,6 @@ void Close(XXRFIDCLient* s)
     else if(g_ConnType == COM) {
         ret = cleanCom(s);
     }
-
-	else if (g_ConnType == USB) {
-		ret = cleanUSB(s);
-	}
 
     else {
         ret = CloseServer(s);
