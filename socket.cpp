@@ -99,7 +99,7 @@ void *SocketTimerThread(void *para)
     XXRFIDCLient *s = (XXRFIDCLient*)para;
 
     while (s->timerThreadIsStop == false) {
-        sleep(2);
+        sleep(1);
 
         struct timeval tv;
         int ret = gettimeofday(&tv, NULL);
@@ -261,12 +261,27 @@ void StartSocket(XXRFIDCLient *client)
 int cleanSocket(XXRFIDCLient* client)
 {
     client->threadIsStop = true;
-    close(client->handle);
+    if (client->handle != -1) {
+        close(client->handle);
+        client->handle = -1;
+    }
 
-    free(client->data);
-    free(client->sem);
-    free(client->result);
-    free(client);
+    client->timerThreadIsStop = true;
+
+    if (client->data != NULL) {
+        free(client->data);
+        client->data = NULL;
+    }
+
+    if (client->sem != NULL) {
+        free(client->sem);
+        client->sem = NULL;
+    }
+
+    if (client->result != NULL) {
+        free(client->result);
+        client->result = NULL;
+    }
 
     return SUCCESS;
 }

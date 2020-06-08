@@ -92,7 +92,7 @@ void *ClientTimerThread(void *para)
     XXRFIDCLient *s = (XXRFIDCLient*)para;
 
     while (s->timerThreadIsStop == false) {
-        sleep(2);
+        sleep(1);
 
         struct timeval tv;
         int ret = gettimeofday(&tv, NULL);
@@ -177,6 +177,9 @@ int ClearClient(XXRFIDCLient *s)
 {
     s->threadIsStop = true;
     close(s->handle);
+    s->handle = -1;
+
+    s->timerThreadIsStop = true;
 
     if (s->sem != NULL) {
         free(s->sem);

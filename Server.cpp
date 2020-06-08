@@ -122,7 +122,7 @@ int CloseServer(XXRFIDCLient* client)
     close(client->handle);
     client->handle;
 	
-    cleanSelectList();
+    // cleanSelectList();
 }
 
 #ifdef __cplusplus

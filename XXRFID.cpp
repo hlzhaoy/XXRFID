@@ -672,22 +672,26 @@ void Close(XXRFIDCLient* s)
 {
     int ret = 0;
 
-    if(g_ConnType == ETH) {
-        ret = cleanSocket(s);
-    }
+	switch(s->type) {
+		case ETH:
+			cleanSocket(s);
+			break;
 
-    else if(g_ConnType == COM) {
-        ret = cleanCom(s);
-    }
+		case COM:
+			cleanCom(s);
+			break;
 
-    else {
-        ret = CloseServer(s);
-    }
+		case SERVER:
+			CloseServer(s);
+			break;
 
-    if(ret > 0) {
-        threadIsStop = true; 
-        // WaitForSingleObject(procThreadHandle, INFINITE);
-    }
+		case CLIENT:
+			ClearClient(s);
+			break;
+
+		default:
+		break;
+	}
 
     return;
 }

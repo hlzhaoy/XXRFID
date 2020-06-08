@@ -281,10 +281,20 @@ int cleanCom(XXRFIDCLient* client)
 	threadIsStop = true;
 	pthread_join(threadID, NULL);
 
-	free(client->data);
-	free(client->sem);
-	free(client->result);
-	free(client);
+	if (client->data != NULL) {
+		free(client->data);
+		client->data = NULL;
+	}
+
+	if (client->sem != NULL) {
+		free(client->sem);
+		client->sem = NULL;
+	}
+
+	if (client->result != NULL) {
+		free(client->result);
+		client->result = NULL;
+	}
 
 	return 0;
 }
