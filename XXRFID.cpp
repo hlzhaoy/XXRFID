@@ -12,7 +12,6 @@
 #include "ReaderProtocol.h"
 #include "result.h"
 #include "XXRFID.h"
-#include "select.h"
 #include "Server.h"
 #include <stdlib.h>
 #include "USB.h"

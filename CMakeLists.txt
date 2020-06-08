@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(XXRFID)
 add_compile_options(-fpermissive)
-set(LIB_SRC client.cpp COM.cpp list.cpp MessageProc.cpp pub.cpp ReaderProtocol.cpp result.cpp RFIDProtocol.cpp select.cpp Server.cpp socket.cpp USB.cpp XXRFID.cpp hid.c)
+set(LIB_SRC client.cpp COM.cpp list.cpp MessageProc.cpp pub.cpp ReaderProtocol.cpp result.cpp RFIDProtocol.cpp Server.cpp socket.cpp USB.cpp XXRFID.cpp hid.c)
 set(APP_SRC main.c)
 add_library(XXRFID SHARED ${LIB_SRC})

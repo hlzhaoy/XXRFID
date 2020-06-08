@@ -1,5 +1,4 @@
 #include "XXRFID.h"
-#include "select.h"
 #include "pub.h"
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
@@ -121,8 +120,6 @@ int CloseServer(XXRFIDCLient* client)
 	client->threadIsStop = true;
     close(client->handle);
     client->handle;
-	
-    cleanSelectList();
 }
 
 #ifdef __cplusplus

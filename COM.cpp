@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "XXRFID.h"
-#include "select.h"
 #include <unistd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
