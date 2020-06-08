@@ -26,7 +26,6 @@
 extern "C" {
 #endif
 
-ConnType g_ConnType = OTHER;
 static pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t  g_MessageProcCreateMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -381,8 +380,6 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 		com[baudRate-com] = '\0';
 		baudRate += 1;
 
-		g_ConnType = COM;
-
 		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
 		if (s == NULL) {
 			ret = -1;
@@ -497,8 +494,6 @@ XXRFIDCLient* OpenUSB(int timeout)
 			return NULL;
 		}
 
-		g_ConnType = USB;
-
 		if(threadIsStop == true) {
 			pthread_mutex_lock(&g_MessageProcCreateMutex);
 			if(threadIsStop == true) {
@@ -601,7 +596,6 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 		}
 		memset(s, 0, sizeof(XXRFIDCLient));
 
-		g_ConnType = ETH;
 		handSocket = initSocket(ip, port, timeout);
 		if (handSocket == -1) {
 			ret = -1;
@@ -776,26 +770,32 @@ void Close(XXRFIDCLient* s)
 {
     int ret = 0;
 
-    if(g_ConnType == ETH) {
-        ret = cleanSocket(s);
-    }
+	switch(s->type) {
+		case ETH:
+			cleanSocket(s);
+			break;
 
-    else if(g_ConnType == COM) {
-        ret = cleanCom(s);
-    }
+		case COM:
+			cleanCom(s);
+			break;
 
-	else if (g_ConnType == USB) {
-		ret = cleanUSB(s);
+		case SERVER:
+			CloseServer(s);
+			break;
+
+		case CLIENT:
+			ClearClient(s);
+			break;
+
+		case USB:
+			cleanUSB(s);
+			break;
+
+		default:
+		break;
 	}
 
-    else {
-        ret = CloseServer(s);
-    }
-
-    if(ret > 0) {
-        threadIsStop = true; 
-        // WaitForSingleObject(procThreadHandle, INFINITE);
-    }
+    threadIsStop = true; 
 
     return;
 }

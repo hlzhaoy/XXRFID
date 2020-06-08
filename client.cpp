@@ -176,6 +176,7 @@ int WriteClient(XXRFIDCLient *s, unsigned char* rbuf, int len)
 int ClearClient(XXRFIDCLient *s)
 {
     s->threadIsStop = true;
+    s->timerThreadIsStop = true;
     close(s->handle);
 
     if (s->sem != NULL) {
