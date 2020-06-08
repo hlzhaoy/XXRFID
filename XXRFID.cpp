@@ -689,6 +689,8 @@ void Close(XXRFIDCLient* s)
 		break;
 	}
 
+	threadIsStop = true;
+
     return;
 }
 
