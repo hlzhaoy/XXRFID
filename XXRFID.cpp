@@ -25,7 +25,6 @@
 extern "C" {
 #endif
 
-ConnType g_ConnType = OTHER;
 static pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t  g_MessageProcCreateMutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -376,8 +375,6 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 		com[baudRate-com] = '\0';
 		baudRate += 1;
 
-		g_ConnType = COM;
-
 		s = (XXRFIDCLient*)malloc(sizeof(XXRFIDCLient));
 		if (s == NULL) {
 			ret = -1;
@@ -497,7 +494,6 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 		}
 		memset(s, 0, sizeof(XXRFIDCLient));
 
-		g_ConnType = ETH;
 		handSocket = initSocket(ip, port, timeout);
 		if (handSocket == -1) {
 			ret = -1;
