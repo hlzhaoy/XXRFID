@@ -460,8 +460,6 @@ void ProcWriteEpc(XXRFIDCLient* s, unsigned char* buf)
 		sprintf(tmp, "failed to SetEvent : %d", errno);
 		LOG_TICK(tmp);
 	}
-
-	LOG_TICK("");
 }
 
 int LockEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseLockEpc* in)
@@ -725,8 +723,6 @@ void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 	msg.AntId = buf[index];
 	index += 1;
 
-	LOG_TICK("");
-
 	while(len >= index) {
 		switch(buf[index]) {
 			case 0x01:
@@ -745,37 +741,30 @@ void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 
 			case 0x03:
 				{
-					LOG_TICK("");
 					int tidLen = (buf[index+1]<<8) | buf[index+2];
 					tmp = HexToString(&buf[index+3], tidLen);
 					memcpy(msg.Tid, tmp, strlen(tmp));
 					delete [] tmp;
 					index += tidLen+2;
-					LOG_TICK("");
 				}
 				break;
 
 			case 0x04:
 				{
-					LOG_TICK("");
 					int userLen = (buf[index+1]<<8) | buf[index+2];
 					tmp = HexToString(&buf[index+3], userLen);
 					memcpy(msg.Userdata, tmp, strlen(tmp));
 					delete [] tmp;
-					index += userLen+2;
-					LOG_TICK("");
 				}
 				break;
 
 			case 0x05:
 				{
-					LOG_TICK("");
 					int ReserveLen = (buf[index+1]<<8) | buf[index+2];
 					tmp = HexToString(&buf[index+3], ReserveLen);
 					memcpy(msg.Reserved, tmp, strlen(tmp));
 					delete [] tmp;
 					index += ReserveLen+2;
-					LOG_TICK("");
 				}
 
 			case 0x06:
@@ -809,9 +798,7 @@ void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 	}
 
 	if(s != NULL && s->call_TagEpcLog != NULL) {
-		LOG_TICK("");
 		s->call_TagEpcLog(msg);
-		LOG_TICK("");
 	}
 }
 

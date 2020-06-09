@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "select.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -156,9 +155,7 @@ int initSocket(char* ip, char* port, int timeout)
         to.tv_sec = timeout;
         to.tv_usec = 0;
 
-        LOG_TICK("");
         ret = select(socketHandle + 1, NULL, &wset, NULL, &to);
-        LOG_TICK("");
         switch(ret)
         {
             case -1:
@@ -170,15 +167,18 @@ int initSocket(char* ip, char* port, int timeout)
             default:
                 if(FD_ISSET(socketHandle, &wset))
                 {
-                    int error;
-                    int len;
-                    ret = getsockopt(socketHandle, SOL_SOCKET, SO_ERROR, &error, (socklen_t *)&len);
+                    int err;
+                    int len = sizeof(err);
+                    ret = getsockopt(socketHandle, SOL_SOCKET, SO_ERROR, &err, (socklen_t *)&len);
                     if (ret < 0) {
+                        char tmp[128] = {0};
+                        sprintf(tmp, "%s", strerror(err));
+                        LOG_TICK(tmp);
                         return -1;
                     }
                     
-                    if (error != 0) {
-                        LOG_TICK(strerror(error));
+                    if (err != 0) {
+                        LOG_TICK(strerror(err));
                         return -1;
                     }
                 }
