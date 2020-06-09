@@ -34,9 +34,6 @@ void messageProc(serialData data)
 		data.s->tick = tv.tv_sec;
 
 		unsigned char MType = data.data[3];
-		char *tmp = HexToString(data.data, data.len);
-		LOG_TICK(tmp);
-		delete []tmp;
 
 		switch((MType>>4)&0x0F)
 		{
@@ -101,11 +98,6 @@ void messageProc(serialData data)
 							break;
 
 						default:
-							{
-								char tmp[12] = {0};
-								sprintf(tmp, "CMD = %d\n", data.data[4]);
-								LOG_TICK(tmp);
-							}
 							break;
 						}
 					}
@@ -120,7 +112,6 @@ void messageProc(serialData data)
 							break;
 
 						 case RFID_MID_WRITEEPC:
-							LOG_TICK("RFID_MID_WRITEEPC");
 							ProcWriteEpc(data.s, &data.data[5]);
 							break;
 
@@ -165,7 +156,6 @@ void messageProc(serialData data)
 							break;
 
 						case RFID_MID_STOP:
-							LOG_TICK("RFID_MID_STOP");
 							ProcStop(data.s, &data.data[5]);
 							break;
 
@@ -177,11 +167,6 @@ void messageProc(serialData data)
 							break;
 
 						default:
-							{
-								char tmp[12] = {0};
-								sprintf(tmp, "CMD = %d\n", data.data[4]);
-								LOG_TICK(tmp);
-							}
 							break;
 						}
 					}
@@ -218,11 +203,6 @@ void messageProc(serialData data)
 							break;
 
 						default:
-							{
-								char tmp[12] = {0};
-								sprintf(tmp, "CMD = %d\n", data.data[4]);
-								LOG_TICK(tmp);
-							}
 							break;
 						}
 					}
@@ -272,11 +252,6 @@ void messageProc(serialData data)
 							break;
 
 						default:
-							{
-								char tmp[12] = {0};
-								sprintf(tmp, "CMD = %d\n", data.data[4]);
-								LOG_TICK(tmp);
-							}
 							break;
 						}
 					}

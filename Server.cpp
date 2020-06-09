@@ -59,11 +59,9 @@ void* ServerThread(void* lpParam)
 			LOG_TICK("failed to malloc");
 			exit(0);
 		}
-
-		tmp->data = (unsigned char*)malloc(1024);
 		memset(tmp->data, 0, 1024);
-		tmp->handle = s;
 
+		tmp->handle = s;
 		tmp->type = CLIENT;
 
 		if (client->call_GClientConnected != NULL) {

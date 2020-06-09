@@ -460,8 +460,6 @@ void ProcWriteEpc(XXRFIDCLient* s, unsigned char* buf)
 		sprintf(tmp, "failed to SetEvent : %d", errno);
 		LOG_TICK(tmp);
 	}
-
-	LOG_TICK("");
 }
 
 int LockEpc(XXRFIDCLient* s, unsigned char* buf, MsgBaseLockEpc* in)
@@ -724,8 +722,6 @@ void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 
 	msg.AntId = buf[index];
 	index += 1;
-
-	LOG_TICK("");
 
 	while(len >= index) {
 		switch(buf[index]) {

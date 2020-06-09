@@ -148,148 +148,114 @@ void SendSynMsg(XXRFIDCLient* s, MESSAGE type, void* msg)
     switch(type) {
         case EMESS_Stop:
 			len = Stop(s, buf, (MsgBaseStop*)msg);
-			LOG_TICK("EMESS_Stop");
         	break;
 
         case EMESS_InventoryEpc:
-			{
-				len = InventoryEpc(s, buf, (MsgBaseInventoryEpc*)msg);
-				LOG_TICK("EMESS_InventoryEpc");
-			}
+			len = InventoryEpc(s, buf, (MsgBaseInventoryEpc*)msg);
         	break;
 
 		case EMESS_WriteEpc:
-			{
-				len = WriteEpc(s, buf, (MsgBaseWriteEpc*)msg);
-				LOG_TICK("EMESS_WriteEpc");
-			}
+			len = WriteEpc(s, buf, (MsgBaseWriteEpc*)msg);
 			break;
 
 		case EMESS_LockEpc:
 			len = LockEpc(s, buf, (MsgBaseLockEpc*)msg);
-			LOG_TICK("EMESS_LockEpc");
 			break;
 
 		case EMESS_DestoryEpc:
 			len = DestoryEpc(s, buf, (MsgBaseDestoryEpc*)msg);
-			LOG_TICK("EMESS_DestoryEpc");
 			break;
 
 		case EMESS_Reset:
 			len = Reset(s, buf);
-			LOG_TICK("EMESS_Reset");
 			break;
 
 		case EMESS_SetSerialParam:
 			len = SetSerialParam(s, buf, (MsgAppSetSerialParam*)msg);
-			LOG_TICK("EMESS_SetSerialParam");
 			break;
 
 		case EMESS_GetSerialParam:
 			len = GetSerialParam(s, buf, (MsgAppGetSerialParam*)msg);
-			LOG_TICK("EMESS_GetSerialParam");
 			break;
 
 		case EMESS_SetGpo:
 			len = SetGpo(s, buf, (MsgAppSetGpo*)msg);
-			LOG_TICK("EMESS_SetGpo");
 			break;
 
 		case EMESS_GetGpiState:
 			len = GetGpiState(s, buf, (MsgAppGetGpiState*)msg);
-			LOG_TICK("EMESS_GetGpiState");
 			break;
 
 		case EMESS_SetGpiTrigger:
 			len = SetGpiTrigger(s, buf, (MsgAppSetGpiTrigger*)msg);
-			LOG_TICK("EMESS_SetGpiTrigger");
 			break;
 
 		case EMESS_GetGpiTrigger:
 			len = GetGpiTrigger(s, buf, (MsgAppGetGpiTrigger*)msg);
-			LOG_TICK("EMESS_GetGpiTrigger");
 			break;
 
 		case EMESS_SetEthernetIp:
 			len = SetEthernetIp(s, buf, (MsgAppSetEthernetIP*)msg);
-			LOG_TICK("EMESS_SetEthernetIp");
 			break;
 
 		case EMESS_GetEthernetIp:
 			len = GetEthernetIp(s, buf, (MsgAppGetEthernetIP*)msg);
-			LOG_TICK("EMESS_GetEthernetIp");
 			break;
 
 		case EMESS_GetEthernetMac:
 			len = GetEtherneMac(s, buf, (MsgAppGetEthernetMac*)msg);
-			LOG_TICK("EMESS_GetEthernetMac");
 			break;
 
 		case EMESS_SetTcpMode:
 			len = SetTcpMode(s, buf, (MsgAppSetTcpMode*)msg);
-			LOG_TICK("EMESS_SetTcpMode");
 			break;
 
 		case EMESS_GetTcpMode:
 			len = GetTcpMode(s, buf, (MsgAppGetTcpMode*)msg);
-			LOG_TICK("EMESS_GetTcpMode");
 			break;
 
 		case EMESS_GetBaseVersion:
 			len = GetBaseVersion(s, buf, (MsgAppGetBaseVersion*)msg);
-			LOG_TICK("EMESS_GetBaseVersion");
 			break;
 
 		case EMESS_GetReaderInfo:
 			len = GetReaderInfo(s, buf, (MsgAppGetReaderInfo*)msg);
-			LOG_TICK("EMESS_GetReaderInfo");
 			break;
 
 		case EMESS_GetCapabilities:
 			len = GetCapabilities(s, buf, (MsgBaseGetCapabilities*)msg);
-			LOG_TICK("EMESS_GetCapabilities");
 			break;
 
 		case EMESS_SetPower:
 			len = SetPower(s, buf, (MsgBaseSetPower*)msg);
-			LOG_TICK("EMESS_SetPower");
 			break;
 
 		case EMESS_GetPower:
 			len = GetPower(s, buf, (MsgBaseGetPower*)msg);
-			LOG_TICK("EMESS_GetPower");
 			break;
 
 		case EMESS_SetFreqRange:
 			len = SetFreqRange(s, buf, (MsgBaseSetFreqRange*)msg);
-			LOG_TICK("EMESS_SetFreqRange");
 			break;
 
 		case EMESS_GetFreqRange:
 			len = GetFreqRange(s, buf, (MsgBaseGetFreqRange*)msg);
-			LOG_TICK("EMESS_GetFreqRange");
 			break;
 
 		case EMESS_SetBaseband:
 			len = SetBaseband(s, buf, (MsgBaseSetBaseband*)msg);
-			LOG_TICK("EMESS_SetBaseband");
 			break;
 
 		case EMESS_GetBaseband:
 			len = GetBaseband(s, buf, (MsgBaseGetBaseband*)msg);
-			LOG_TICK("EMESS_GetBaseband");
 			break;
 
 		case EMESS_SetTagLog:
-			{
-				len= SetTagLog(s, buf, (MsgBaseSetTagLog*)msg);
-				LOG_TICK("EMESS_SetTagLog");
-			}
+			len= SetTagLog(s, buf, (MsgBaseSetTagLog*)msg);
 			break;
 
 		case EMESS_GetTagLog:
 			len = GetTagLog(s, buf, (MsgBaseGetTagLog*)msg);
-			LOG_TICK("EMESS_GetTagLog");
 			break;
 
 		case EMESS_Inventory6b:
@@ -353,6 +319,29 @@ void SendSynMsg(XXRFIDCLient* s, MESSAGE type, void* msg)
 	pthread_mutex_unlock(&g_mutex);
 }
 
+int StartProcThread()
+{
+	if (threadIsStop == true) {
+		pthread_mutex_lock(&g_MessageProcCreateMutex);
+		if (threadIsStop == true) {
+			QueueInit();
+			threadIsStop = false;
+			pthread_t threadID;
+			int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
+			if (ret != 0) {
+				LOG_TICK("failed to pthread_create");
+				pthread_mutex_unlock(&g_MessageProcCreateMutex);
+				return -1;
+			} else {
+				pthread_detach(threadID);
+			}
+		}
+		pthread_mutex_unlock(&g_MessageProcCreateMutex);
+	}
+
+	return 0;
+}
+
 /************************************************
  *  name:
  *      OpenSerial
@@ -388,29 +377,16 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 
 		memset(s, 0, sizeof(XXRFIDCLient));
 		s->handle = initCom(com, baudRate);
-
 		if (s->handle == -1) {
-			free(s);
-			return NULL;
+			ret = -1;
+			LOG_TICK("failed to initCom");
+			break;
 		}
 
-		if (threadIsStop == true) {
-			pthread_mutex_lock(&g_MessageProcCreateMutex);
-			if (threadIsStop == true) {
-				QueueInit();
-				threadIsStop = false;
-				pthread_t threadID;
-				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
-				if ( ret != 0) {
-					ret = -1;
-					LOG_TICK("failed to pthread_create");
-					pthread_mutex_unlock(&g_MessageProcCreateMutex);
-					break;
-				} else {
-					pthread_detach(threadID);
-				}
-			}
-			pthread_mutex_unlock(&g_MessageProcCreateMutex);
+		if (StartProcThread() == -1) {
+			ret = -1;
+			LOG_TICK("failed to StartProcThread");
+			break;
 		}
 
 		s->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
@@ -450,14 +426,21 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 	if (ret < 0) {
 		if (s != NULL && s->result != NULL) {
 			free(s->result);
+			s->result = NULL;
 		}
 
 		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
+			s->result = NULL;
 		}
 
 		if (s != NULL && s->data != NULL) {
 			free(s->data);
+			s->result = NULL;
+		}
+
+		if (s != NULL) {
+			free(s);
 		}
 
 		return NULL;
@@ -465,7 +448,6 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 
 	s->type = COM;
 	s->isOpened = true;
-	LOG_TICK("successed to OpenCom");
 
 	StartCom(s);
 
@@ -487,29 +469,16 @@ XXRFIDCLient* OpenUSB(int timeout)
 
 		memset(s, 0, sizeof(XXRFIDCLient));
 		s->handle = (long)initUSB(timeout);
-
 		if((s->handle) == NULL) {
 			free(s);
+			LOG_TICK("failed to initUSB");
 			return NULL;
 		}
 
-		if(threadIsStop == true) {
-			pthread_mutex_lock(&g_MessageProcCreateMutex);
-			if(threadIsStop == true) {
-				QueueInit();
-				threadIsStop = false;
-				pthread_t threadID;
-				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
-				if ( ret != 0) {
-					ret = -1;
-					LOG_TICK("failed to pthread_create");
-					pthread_mutex_unlock(&g_MessageProcCreateMutex);
-					break;
-				} else {
-					pthread_detach(threadID);
-				}
-			}
-			pthread_mutex_unlock(&g_MessageProcCreateMutex);
+		if (StartProcThread() == -1) {
+			ret = -1;
+			LOG_TICK("failed to StartProcThread");
+			break;
 		}
 
 		s->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
@@ -548,14 +517,21 @@ XXRFIDCLient* OpenUSB(int timeout)
 	if (ret < 0) {
 		if (s != NULL && s->result != NULL) {
 			free(s->result);
+			s->result = NULL;
 		}
 
 		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
+			s->sem = NULL;
 		}
 
 		if (s != NULL && s->data != NULL) {
 			free(s->data);
+			s->data = NULL;
+		}
+
+		if (s != NULL) {
+			free(s);
 		}
 
 		return NULL;
@@ -597,29 +573,17 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 
 		handSocket = initSocket(ip, port, timeout);
 		if (handSocket == -1) {
+			LOG_TICK("failed to initSocket");
 			ret = -1;
 			break;
 		}
 
 		s->handle = handSocket;
 
-		if(threadIsStop == true) {
-			pthread_mutex_lock(&g_MessageProcCreateMutex);
-			if(threadIsStop == true) {
-				QueueInit();
-				threadIsStop = false;
-				pthread_t threadID;
-				int ret = pthread_create(&threadID, NULL, messageProcThread, NULL);
-				if ( ret != 0) {
-					ret = -1;
-					LOG_TICK("failed to pthread_create");
-					pthread_mutex_unlock(&g_MessageProcCreateMutex);
-					break;
-				} else {
-					pthread_detach(threadID);
-				}
-			}
-			pthread_mutex_unlock(&g_MessageProcCreateMutex);
+		if (StartProcThread() == -1) {
+			ret = -1;
+			LOG_TICK("failed to StartProcThread");
+			break;
 		}
 
 		s->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
@@ -658,17 +622,22 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 	if (ret < 0) {
 		if (s != NULL && s->result != NULL) {
 			free(s->result);
+			s->result = NULL;
 		}
 
 		if (s != NULL && s->sem != NULL) {
 			free(s->sem);
+			s->sem = NULL;
 		}
 
 		if (s != NULL && s->data != NULL) {
 			free(s->data);
+			s->data = NULL;
 		}
 
-		free(s);
+		if (s != NULL) {
+			free(s);
+		}
 
 		return NULL;
 	}
@@ -702,59 +671,17 @@ XXRFIDCLient* Open(short port)
 		client->handle = handle;
 		client->type = SERVER;
 
-		if(threadIsStop == true) {
-			pthread_mutex_lock(&g_MessageProcCreateMutex);
-			if(threadIsStop == true) {
-				QueueInit();
-				// SelectListInit();
-				threadIsStop = false;
-				pthread_t threadID = 0;
-				int res = pthread_create(&threadID, NULL, messageProcThread, NULL);
-				if (res != 0) {
-					LOG_TICK("failed to pthread_create");
-					pthread_mutex_unlock(&g_MessageProcCreateMutex);
-					return NULL;
-				}
-			}
-			pthread_mutex_unlock(&g_MessageProcCreateMutex);
-		}
-
-		client->sem = (sem_t*)malloc(sizeof(sem_t) * EMESS_Count);
-		if (client->sem == NULL) {
-			LOG_TICK("failed to malloc");
+		if (StartProcThread() == -1) {
 			ret = -1;
-		}
-
-		memset(client->sem, 0, sizeof(sem_t) * EMESS_Count);
-		for (int i = 0; i < EMESS_Count; i++) {
-			int ret = sem_init(&client->sem[i], 0, 0);
-			if (ret != 0) {
-				LOG_TICK("filed to sem_init");
-				ret = -1;
-				break;
-			}
-		}
-
-		client->result = (MessageResult*)malloc(sizeof(MessageResult) * EMESS_Count);
-		if (client->result == NULL) {
-			ret = -1;
-			LOG_TICK("failed to malloc");
+			LOG_TICK("failed to StartProcThread");
 			break;
 		}
-		memset(client->result, 0, sizeof(MessageResult) * EMESS_Count);
-
 	} while (false);
 
 	if (ret < 0) {
-		if (client != NULL && client->result != NULL) {
-			free(client->result);
+		if (client != NULL) {
+			free(client);
 		}
-
-		if (client != NULL && client->sem != NULL) {
-			free(client->sem);
-		}
-
-		free(client);
 
 		return NULL;
 	}

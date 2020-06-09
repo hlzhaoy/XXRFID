@@ -75,7 +75,7 @@ void* comThread(void* lpParam)
 void setNewOptions(int m_fd, int baudrate)
 {
    struct termios newtio;
-   if (tcgetattr(m_fd, &newtio)!=0) {
+   if (tcgetattr(m_fd, &newtio) != 0) {
       LOG_TICK("failed to tcgetattr");
    }
 
@@ -275,21 +275,22 @@ int cleanCom(XXRFIDCLient* client)
 	close((long)client->handle);
 	client->handle = -1;
 
-	LOG_TICK("in cleanCom");
-
 	threadIsStop = true;
 	pthread_join(threadID, NULL);
 
 	if (client->data != NULL) {
 		free(client->data);
+		client->data = NULL;
 	}
 
 	if (client->sem != NULL) {
 		free(client->sem);
+		client->sem = NULL;
 	}
 
 	if (client->result != NULL) {
 		free(client->result);
+		client->result = NULL;
 	}
 
 	return 0;
