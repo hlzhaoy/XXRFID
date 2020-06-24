@@ -99,6 +99,7 @@ typedef struct XXRFIDCLient{
     bool threadIsStop;
     bool timerThreadIsStop;
     unsigned long tick;
+    pthread_t tid;
 }XXRFIDCLient;
 
 XXRFIDCLient* OpenSerial(char* readerName, int timeout);

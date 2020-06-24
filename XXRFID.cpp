@@ -421,6 +421,8 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 			break;
 		}
 		memset(s->data, 0, 1024);
+
+		s->mutex = PTHREAD_MUTEX_INITIALIZER;
 	} while (false) ;
 
 	if (ret < 0) {
@@ -512,6 +514,9 @@ XXRFIDCLient* OpenUSB(int timeout)
 			LOG_TICK("failed to malloc");
 			break;
 		}
+		memset(s->data, 0, 1024);
+
+		s->mutex = PTHREAD_MUTEX_INITIALIZER;
 	} while (false) ;
 
 	if (ret < 0) {
@@ -617,6 +622,9 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 			LOG_TICK("failed to malloc");
 			break;
 		}
+		memset(s->data, 0, 1024);
+
+		s->mutex = PTHREAD_MUTEX_INITIALIZER;
     } while(false);
 
 	if (ret < 0) {
@@ -676,6 +684,7 @@ XXRFIDCLient* Open(short port)
 			LOG_TICK("failed to StartProcThread");
 			break;
 		}
+		client->mutex = PTHREAD_MUTEX_INITIALIZER;
 	} while (false);
 
 	if (ret < 0) {
