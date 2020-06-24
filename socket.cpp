@@ -238,9 +238,8 @@ int writeSocket(XXRFIDCLient *client, unsigned char* buf, int len)
 
 void StartSocket(XXRFIDCLient *client)
 {
-    pthread_t threadID;
     client->threadIsStop = false;
-    int ret = pthread_create(&threadID, NULL, SocketThread, (XXRFIDCLient*)client);
+    int ret = pthread_create(&(client->tid), NULL, SocketThread, (XXRFIDCLient*)client);
     if (ret != 0) {
         client->threadIsStop = true;
         LOG_TICK("failed to pthread_create");
