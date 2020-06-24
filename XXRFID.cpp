@@ -146,15 +146,11 @@ void SendSynMsg(XXRFIDCLient* s, MESSAGE type, void* msg)
         	break;
 
         case EMESS_InventoryEpc:
-			{
-				len = InventoryEpc(s, buf, (MsgBaseInventoryEpc*)msg);
-			}
+			len = InventoryEpc(s, buf, (MsgBaseInventoryEpc*)msg);
         	break;
 
 		case EMESS_WriteEpc:
-			{
-				len = WriteEpc(s, buf, (MsgBaseWriteEpc*)msg);
-			}
+			len = WriteEpc(s, buf, (MsgBaseWriteEpc*)msg);
 			break;
 
 		case EMESS_LockEpc:
@@ -418,6 +414,9 @@ XXRFIDCLient* OpenSerial(char* readerName, int timeout)
 			break;
 		}
 		memset(s->data, 0, 1024);
+
+		s->mutex = PTHREAD_MUTEX_INITIALIZER;
+
 	} while (false) ;
 
 	if (ret < 0) {
@@ -515,6 +514,9 @@ XXRFIDCLient* OpenTcp(char* readerName, int timeout)
 			LOG_TICK("failed to malloc");
 			break;
 		}
+
+		s->mutex = PTHREAD_MUTEX_INITIALIZER;
+
     } while(false);
 
 	if (ret < 0) {
@@ -595,6 +597,8 @@ XXRFIDCLient* Open(short port)
 			break;
 		}
 		memset(client->result, 0, sizeof(MessageResult) * EMESS_Count);
+
+		client->mutex = PTHREAD_MUTEX_INITIALIZER;
 
 	} while (false);
 

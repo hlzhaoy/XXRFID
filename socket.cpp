@@ -72,11 +72,6 @@ void* SocketThread(void* lpParam)
 		usleep(5);
 	}
 
-    if (client->data != NULL) {
-        free(client->data);
-        client->data = NULL;
-    }
-
 	return 0;  
 }
 
@@ -90,6 +85,11 @@ static void FreeResource(XXRFIDCLient *s)
     if (s->result != NULL) {
         free(s->result);
         s->result = NULL;
+    }
+
+    if (s->data != NULL) {
+        free(s->data);
+        s->data = NULL;
     }
 }
 
@@ -115,7 +115,9 @@ void *SocketTimerThread(void *para)
                 s->call_TcpDisconnected((char*)"time out to disconnect");
                 s->threadIsStop = true;
                 s->timerThreadIsStop = true;
-                close(s->handle);                
+                close(s->handle);
+                s->handle = -1;
+                pthread_join(s->tid, NULL);         
                 FreeResource(s);                
             }
         }
@@ -126,6 +128,9 @@ int initSocket(char* ip, char* port, int timeout)
 {
     int socketHandle = socket(AF_INET, SOCK_STREAM, 0);
     if (socketHandle == -1) {
+        char tmp[128] = {0};
+        sprintf(tmp, "failed to socket: %s", strerror(errno));
+        LOG_TICK(tmp);
         return -1;
     }
 
@@ -134,6 +139,9 @@ int initSocket(char* ip, char* port, int timeout)
 	inet_pton(AF_INET, ip, &servAddr.sin_addr);
     short int tmpPort = atoi(port);
     if(tmpPort == 0) {
+        char tmp[128] = {0};
+        sprintf(tmp, "failed to atoi: %s", port);
+        LOG_TICK(tmp);
         return -1;
     }
     servAddr.sin_port = htons(tmpPort);
@@ -143,6 +151,8 @@ int initSocket(char* ip, char* port, int timeout)
     int ret = connect(socketHandle, (struct sockaddr*)&servAddr, sizeof(servAddr));
     if (ret == -1) {
         if (errno != EINPROGRESS) {
+            char tmp[64] = {0};
+            sprintf(tmp, "failed to connect: %s", strerror(errno));
             return -1;
         }
 
@@ -159,10 +169,14 @@ int initSocket(char* ip, char* port, int timeout)
         switch(ret)
         {
             case -1:
-                perror("select");
-                return -1;
+                {
+                    char tmp[128] = {0};
+                    sprintf(tmp, "select error: %s", strerror(errno));
+                    LOG_TICK(tmp);
+                    return -1;
+                }
             case 0:
-                printf("timeout\n");
+                LOG_TICK("timeout\n");
                 return -1;
             default:
                 if(FD_ISSET(socketHandle, &wset))
@@ -202,8 +216,9 @@ int readSocket(XXRFIDCLient *client, unsigned char* buf, int len)
     if (ret == 0) { // reset been peer
         if (client->call_TcpDisconnected != NULL) {
             client->call_TcpDisconnected((char*)"connection has been closed by peer");
-            FreeResource(client);
             client->threadIsStop = true;
+            pthread_join(client->tid, NULL);
+            FreeResource(client);
         }
     }
 
@@ -222,8 +237,9 @@ int writeSocket(XXRFIDCLient *client, unsigned char* buf, int len)
         if (errno == ECONNRESET) {
             if (client->call_TcpDisconnected != NULL) {
                 client->call_TcpDisconnected((char*)"connection has been closed by peer");
-                FreeResource(client);
                 client->threadIsStop = true;
+                pthread_join(client->tid, NULL);
+                FreeResource(client);
             }    
         }
     }
@@ -237,14 +253,11 @@ int writeSocket(XXRFIDCLient *client, unsigned char* buf, int len)
 
 void StartSocket(XXRFIDCLient *client)
 {
-    pthread_t threadID;
     client->threadIsStop = false;
-    int ret = pthread_create(&threadID, NULL, SocketThread, (XXRFIDCLient*)client);
+    int ret = pthread_create(&(client->tid), NULL, SocketThread, (XXRFIDCLient*)client);
     if (ret != 0) {
         client->threadIsStop = true;
         LOG_TICK("failed to pthread_create");
-    } else {
-        pthread_detach(threadID);
     }
 
     client->timerThreadIsStop = false;
@@ -260,11 +273,12 @@ void StartSocket(XXRFIDCLient *client)
 
 int cleanSocket(XXRFIDCLient* client)
 {
-    client->threadIsStop = true;
     if (client->handle != -1) {
         close(client->handle);
         client->handle = -1;
     }
+    client->threadIsStop = true;
+    pthread_join(client->tid, NULL);
 
     client->timerThreadIsStop = true;
 
