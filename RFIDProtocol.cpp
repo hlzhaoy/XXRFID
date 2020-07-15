@@ -726,69 +726,118 @@ void ProcDataResultCmd(XXRFIDCLient* s, unsigned char* buf)
 	while(len >= index) {
 		switch(buf[index]) {
 			case 0x01:
-				{
-					msg.Rssi = buf[index+1];
-					index += 1;
-				}
-				break;
+			{
+				msg.Rssi = buf[index+1];
+				index += 1;
+			}
+			break;
 
 			case 0x02:
-				{
-					msg.Result = buf[index+1];
-					index += 1;
-				}
-				break;
+			{
+				msg.Result = buf[index+1];
+				index += 1;
+			}
+			break;
 
 			case 0x03:
-				{
-					int tidLen = (buf[index+1]<<8) | buf[index+2];
-					tmp = HexToString(&buf[index+3], tidLen);
-					memcpy(msg.Tid, tmp, strlen(tmp));
-					delete [] tmp;
-					index += tidLen+2;
-				}
-				break;
+			{
+				int tidLen = (buf[index+1]<<8) | buf[index+2];
+				tmp = HexToString(&buf[index+3], tidLen);
+				memcpy(msg.Tid, tmp, strlen(tmp));
+				delete [] tmp;
+				index += tidLen+2;
+			}
+			break;
 
 			case 0x04:
-				{
-					int userLen = (buf[index+1]<<8) | buf[index+2];
-					tmp = HexToString(&buf[index+3], userLen);
-					memcpy(msg.Userdata, tmp, strlen(tmp));
-					delete [] tmp;
-					index += userLen+2;
-				}
-				break;
+			{
+				int userLen = (buf[index+1]<<8) | buf[index+2];
+				tmp = HexToString(&buf[index+3], userLen);
+				memcpy(msg.Userdata, tmp, strlen(tmp));
+				delete [] tmp;
+				index += userLen+2;
+			}
+			break;
 
 			case 0x05:
-				{
-					int ReserveLen = (buf[index+1]<<8) | buf[index+2];
-					tmp = HexToString(&buf[index+3], ReserveLen);
-					memcpy(msg.Reserved, tmp, strlen(tmp));
-					delete [] tmp;
-					index += ReserveLen+2;
-				}
+			{
+				int ReserveLen = (buf[index+1]<<8) | buf[index+2];
+				tmp = HexToString(&buf[index+3], ReserveLen);
+				memcpy(msg.Reserved, tmp, strlen(tmp));
+				delete [] tmp;
+				index += ReserveLen+2;
+			}
 
 			case 0x06:
-				index += 1;
-				break;
+			index += 1;
+			break;
 
 			case 0x07:
-				{
-					index += 8;
-				}
-				break;
+			{
+				index += 8;
+			}
+			break;
 
 			case 0x08:
-				{
-					index += 4;
-				}
-				break;
+			{
+				index += 4;
+			}
+			break;
 
 			case 0x09:
-				{
-					index += 1;
+			{
+				index += 1;
+			}
+			break;
+
+			case 0x0A: // Epc数据
+			{
+				int elen = (buf[index + 1] << 8) | buf[index + 2];
+				index += elen + 2;
+			}
+			break;
+
+			case 0x11:
+			case 0x12:
+			case 0x13:
+			index += 2;
+			break;
+
+			case 0x20:
+			{
+				int tlen = (buf[index + 1] << 8) | buf[index + 2];
+				index += tlen + 2;
+			}
+			break;
+			
+			case 0x21:
+			index += 4;
+			break;
+
+			case 0x22:
+			{
+				unsigned short dataLen = 0, tlen = 0;
+				unsigned char tbuf[128] = {0};
+				tbuf[tlen++] = FRAMEHEAD;
+				unsigned int head = GetMsgHead(MsgType_ReaderConfig, READER_MID_CLEANCACHE);
+				FillProtocol(&tbuf[1], head);
+				tlen += sizeof(head);
+				tlen += 2; //长度字节占位
+
+				memcpy(&tbuf[len], &buf[index+1], 4);
+				tlen += 4;
+				dataLen += 4;
+
+				FillDataLen(&tbuf[5], dataLen);
+				FillCrC(&tbuf[1], tlen-1);
+				tlen += 2;
+
+				int ret = WriteCmd(s, tbuf, tlen);
+				if(ret != SUCCESS) {
+					printf("failed to WriteCmd");
 				}
-				break;
+			}
+			break;
 
 			default:
 				break;

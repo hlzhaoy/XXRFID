@@ -46,6 +46,11 @@ typedef enum {
     EMESS_GetEthernetMac,
     EMESS_SetTcpMode,
     EMESS_GetTcpMode,
+    /*断点续传*/
+    EMESS_SetResume,
+    EMESS_GetResume,
+    EMESS_GetCache,
+    EMESS_CleanCache,
     EMESS_Count
 }MESSAGE;
 

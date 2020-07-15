@@ -406,6 +406,27 @@ typedef struct {
 
 #endif 
 
+#if REGION("断点续传")
+typedef struct {
+	Result rst;
+	char onOff;
+} MsgAppSetResume;
+
+typedef struct {
+	Result rst;
+	char onOff;
+} MsgAppGetResume;
+
+typedef struct {
+	Result rst;
+}MsgAppGetCache;
+
+typedef struct {
+	Result rst;
+}MsgAppCleanCache;
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

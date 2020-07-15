@@ -274,6 +274,22 @@ void SendSynMsg(XXRFIDCLient* s, MESSAGE type, void* msg)
 			len = Lock6bGet(s, buf, (MsgBaseLock6bGet*)msg);
 			break;
 
+		case EMESS_SetResume:
+			len = SetResume(s, buf, (MsgAppSetResume*)msg);
+			break;
+
+		case EMESS_GetResume:
+			len = GetResume(s, buf, (MsgAppGetResume*)msg);
+			break;
+
+		case EMESS_GetCache:
+			len = GetCache(s, buf, (MsgAppGetCache*)msg);
+			break;
+
+		case EMESS_CleanCache:
+			len = CleanCache(s, buf, (MsgAppCleanCache*)msg);
+			break;
+
         default:
         	break;
     }

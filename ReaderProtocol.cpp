@@ -929,6 +929,176 @@ void ProcGetReaderInfo(XXRFIDCLient* s, unsigned char* buf)
 	sem_post(&s->sem[EMESS_GetReaderInfo]);
 }
 
+#if REGION("断点续传")
+int SetResume(XXRFIDCLient* s, unsigned char* buf, MsgAppSetResume* msg)
+{
+	if (s == NULL || s->result == NULL || msg == NULL) {
+		return -1;
+	}
+
+	s->result[EMESS_SetResume].rst = (void*)msg;
+
+	unsigned short dataLen = 0, len = 0;
+	buf[len++] = FRAMEHEAD;
+	unsigned int head = GetMsgHead(MsgType_ReaderConfig, READER_MID_SETRESUME);
+	FillProtocol(&buf[1], head);
+	len += sizeof(head);
+	len += 2; //长度字节占位
+
+	buf[len++] = msg->onOff;
+	dataLen += 1;
+
+	FillDataLen(&buf[5], dataLen);
+	FillCrC(&buf[1], len-1);
+    len += 2;
+
+	return len;
+}
+
+void ProcSetResume(XXRFIDCLient* s, unsigned char* buf)
+{
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
+	int index = 2;
+	if (s->result[EMESS_GetResume].rst != NULL) {
+		MsgAppGetResume* msg = (MsgAppGetResume*)(s->result[EMESS_GetResume].rst);
+		msg->rst.RtCode = buf[index];
+	}
+
+	sem_post(&s->sem[EMESS_GetResume]);
+}
+
+int GetResume(XXRFIDCLient* s, unsigned char* buf, MsgAppGetResume* msg)
+{
+	if (s == NULL || s->result == NULL || msg == NULL) {
+		return -1;
+	}
+
+	s->result[EMESS_GetResume].rst = (void*)msg;
+
+	unsigned short dataLen = 0, len = 0;
+	buf[len++] = FRAMEHEAD;
+	unsigned int head = GetMsgHead(MsgType_ReaderConfig, READER_MID_GETRESUME);
+	FillProtocol(&buf[1], head);
+	len += sizeof(head);
+	len += 2; //长度字节占位
+
+	FillDataLen(&buf[5], dataLen);
+	FillCrC(&buf[1], len-1);
+    len += 2;
+
+	return len;
+}
+
+void ProcGetResume(XXRFIDCLient* s, unsigned char* buf)
+{
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
+	int index = 2;
+	if (s->result[EMESS_GetResume].rst != NULL) {
+		MsgAppGetResume* msg = (MsgAppGetResume*)(s->result[EMESS_GetResume].rst);
+		msg->onOff = buf[index];
+	}
+
+	sem_post(&s->sem[EMESS_GetResume]);
+}
+
+int GetCache(XXRFIDCLient* s, unsigned char* buf, MsgAppGetCache* msg)
+{
+	if (s == NULL || s->result == NULL || msg == NULL) {
+		return -1;
+	}
+
+	s->result[EMESS_GetCache].rst = (void*)msg;
+
+	unsigned short dataLen = 0, len = 0;
+	buf[len++] = FRAMEHEAD;
+	unsigned int head = GetMsgHead(MsgType_ReaderConfig, READER_MID_GETCACHE);
+	FillProtocol(&buf[1], head);
+	len += sizeof(head);
+	len += 2; //长度字节占位
+
+	FillDataLen(&buf[5], dataLen);
+	FillCrC(&buf[1], len-1);
+    len += 2;
+
+	return len;
+}
+
+void ProcGetCache(XXRFIDCLient* s, unsigned char* buf)
+{
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
+	int index = 2;
+	if (s->result[EMESS_GetCache].rst != NULL) {
+		MsgAppGetResume* msg = (MsgAppGetResume*)(s->result[EMESS_GetCache].rst);
+		msg->rst.RtCode = buf[index];
+		switch(msg->rst.RtCode) {
+			case 0:
+			strcpy(msg->rst.RtMsg, "existing.");
+			break;
+
+			case 1:
+			strcpy(msg->rst.RtMsg, "null.");
+			break;
+
+			case 2:
+			strcpy(msg->rst.RtMsg, "over.");
+			break;
+
+			default:
+			break;
+		}
+	}
+
+	sem_post(&s->sem[EMESS_GetCache]);
+}
+
+int CleanCache(XXRFIDCLient* s, unsigned char* buf, MsgAppCleanCache* msg)
+{
+	if (s == NULL || s->result == NULL || msg == NULL) {
+		return -1;
+	}
+
+	s->result[EMESS_CleanCache].rst = (void*)msg;
+
+	unsigned short dataLen = 0, len = 0;
+	buf[len++] = FRAMEHEAD;
+	unsigned int head = GetMsgHead(MsgType_ReaderConfig, READER_MID_CLEANCACHE);
+	FillProtocol(&buf[1], head);
+	len += sizeof(head);
+	len += 2; //长度字节占位
+
+	FillDataLen(&buf[5], dataLen);
+	FillCrC(&buf[1], len-1);
+    len += 2;
+
+	return len;
+}
+
+void ProcCleanCache(XXRFIDCLient* s, unsigned char* buf)
+{
+	if (s == NULL || s->result == NULL) {
+		return;
+	}
+
+	int index = 2;
+	if (s->result[EMESS_CleanCache].rst != NULL) {
+		MsgAppGetResume* msg = (MsgAppGetResume*)(s->result[EMESS_CleanCache].rst);
+		msg->onOff = buf[index];
+	}
+
+	sem_post(&s->sem[EMESS_CleanCache]);
+}
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif

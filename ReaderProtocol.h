@@ -51,6 +51,18 @@ void ProcGetBaseVersion(XXRFIDCLient* s, unsigned char* buf);
 int GetReaderInfo(XXRFIDCLient* s, unsigned char* buf, MsgAppGetReaderInfo*);
 void ProcGetReaderInfo(XXRFIDCLient* s, unsigned char* buf);
 
+int SetResume(XXRFIDCLient* s, unsigned char* buf, MsgAppSetResume*);
+void ProcSetResume(XXRFIDCLient* s, unsigned char* buf);
+
+int GetResume(XXRFIDCLient* s, unsigned char* buf, MsgAppGetResume*);
+void ProcGetResume(XXRFIDCLient* s, unsigned char* buf);
+
+int GetCache(XXRFIDCLient* s, unsigned char* buf, MsgAppGetCache*);
+void ProcGetCache(XXRFIDCLient* s, unsigned char* buf);
+
+int CleanCache(XXRFIDCLient* s, unsigned char* buf, MsgAppCleanCache*);
+void ProcCleanCache(XXRFIDCLient* s, unsigned char* buf);
+
 #ifdef __cplusplus
 }
 #endif

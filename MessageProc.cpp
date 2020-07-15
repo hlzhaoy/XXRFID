@@ -97,6 +97,22 @@ void messageProc(serialData data)
 							ProcGetReaderInfo(data.s, &data.data[5]);
 							break;
 
+						case READER_MID_SETRESUME:
+							ProcSetResume(data.s, &data.data[5]);
+							break;
+						
+						case READER_MID_GETRESUME:
+							ProcGetResume(data.s, &data.data[5]);
+							break;
+
+						case READER_MID_GETCACHE:
+							ProcGetCache(data.s, &data.data[5]);
+							break;
+
+						case READER_MID_CLEANCACHE:
+							ProcCleanCache(data.s, &data.data[5]);
+							break;
+
 						default:
 							break;
 						}

@@ -28,9 +28,9 @@ void GClientConnected(XXRFIDCLient *client)
 
 int main(int argc, char* argv[])
 {
-    // XXRFIDCLient* s = OpenSerial("/dev/ttyUSB0:115200", 5);
+    XXRFIDCLient* s = OpenSerial("/dev/ttyUSB0:115200", 5);
 	// XXRFIDCLient* s = OpenUSB(5);
-	XXRFIDCLient *s = OpenTcp("192.168.1.168:8168", 5);
+	// XXRFIDCLient *s = OpenTcp("192.168.1.168:8168", 5);
 	// XXRFIDCLient *s = Open(8168);
 	if(s == NULL)
 	{
@@ -69,7 +69,8 @@ int main(int argc, char* argv[])
 		"18, 重启读写器 \n"
 		"20, 配置Gpo状态 \n"
 		"22, 查询读写器功率 \n"
-		"23, 配置读写器功率 \n");
+		"23, 配置读写器功率 \n"
+		"27, 获取读写器缓存标签数据 \n");
 
 	int select = 0;
 	while (scanf("%d%*c", &select) != EOF) {
@@ -477,6 +478,20 @@ int main(int argc, char* argv[])
 
 			printf("success \n");
 		}
+		break;
+
+		case 27: // 获取缓存数据
+		{
+			MsgAppGetCache msg;
+			memset(&msg, 0, sizeof(msg));
+			
+			SendSynMsg(s, EMESS_GetCache, &msg);
+			if (msg.rst.RtCode != 0) {
+				printf("failed to EMESS_GetCache : %s \n", msg.rst.RtMsg);
+				continue;
+			}
+		}
+		break;
 
         default:
             break;
